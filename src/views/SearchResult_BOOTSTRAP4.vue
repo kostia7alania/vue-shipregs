@@ -28,8 +28,8 @@
 
 <script> 
 import { searchResultFields_test } from '../assets/searchResultFields_test.js';
- 
- 
+
+
 export default {  
   name: "search-result",
   props:['searchResult'],
