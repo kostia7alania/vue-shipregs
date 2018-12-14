@@ -63,8 +63,8 @@ export default {
     return {
       ed_Port: null,
       ed_DateFrom: null, 
-      timeFrom: null,
-      timeTo:null,
+      timeFrom: {HH:"11", mm:"11"},
+      timeTo: {HH:"22", mm:"22"},
       ports: ports
     };
   }
