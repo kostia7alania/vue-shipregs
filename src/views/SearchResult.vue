@@ -1,22 +1,35 @@
 <template>
     <div id="search-result"> 
-    <b-container fluid > 
+    <b-container fluid>
      <table class="table table-bordered">
   <thead> <tr> <th scope="col" v-for="f in FIELDS" :key="f">{{f}}</th>  </tr> </thead>
-  <tbody>
-    <tr> <th :colspan="FIELDS.length">1. ЗАХОД С МОРЯ</th> </tr>
-    <tr> <th class="text-left" :colspan="FIELDS.length">14.11.2018</th> </tr>
+ 
+
+  <tbody v-for="(k,index) in keys_first" :key="index"> 
     
-    <tr v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
-      <td v-for="(f,ii) in FIELDS" :key="f">
-        <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
-        <span v-else>{{f}}</span>
-      </td>
-    </tr>
+    <tr v-if="index==0"> <th :colspan="12">1. ЗАХОД С МОРЯ</th> </tr> 
     
-     
+    <tr> <th class="text-left" :colspan="FIELDS.length">{{k}}</th> </tr>
     
+    <tr v-for="(e,i) in items_first[k]" :key="i">
+      
+        <th class="font-weight-bold">{{++i}}</th>
+        <td>{{e.CompanyName}}</td>
+        <td>{{e.CountryNameRus}}</td>
+        <td>{{e.DateEnter}}</td>
+        <td>{{e.DateEnter}}</td>
+        <td>{{e.DateEnter}}</td>
+        <td>{{e.DateEnter}}</td>
+        <td>{{e.Length}}</td>
+        <td>{{e.DateEnter}}</td>
+        <td>{{e.DateEnter}}</td>
+        <td>{{e.DateEnter}}</td>
+        <td>{{e.DateEnter}}</td>
+
+    </tr> 
+
   </tbody>
+  
 </table>
  
     
@@ -59,10 +72,20 @@ export default {
   }, 
   computed: { 
     fields() { return searchResultFields_test },
-    items() {
-      let o = this.searchResult;
-      if (o && typeof  o == 'object' && 'first' in o) return o.first
-    },
+    items_first () {  return this.parseRow('first') },
+    items_second () {  return this.parseRow('second') },
+    items_third () {  return this.parseRow('third') },
+    items_fourth () {  return this.parseRow('fourth') },
+    items_fifth () {  return this.parseRow('fifth') },
+    
+    keys_first () {return this.parseKey(this.items_first) },
+    keys_second() {return this.parseKey(this.items_second)},
+    keys_third () {return this.parseKey(this.items_third) },
+    keys_fourth() {return this.parseKey(this.items_fourth)},
+    keys_fifth () {return this.parseKey(this.items_fifth) },
+
+
+
     itemsComputed() {//_rowVariant: 'danger'  
       let itm = this.items;
       if(itm){
@@ -82,7 +105,12 @@ export default {
    },
   mounted() {}, 
   updated() {},
-  methods: {  
+  methods: {
+    parseKey(key){ return typeof key == 'object'?Object.keys(key):''; },
+    parseRow(name){
+      let o = this.searchResult;
+      return o && typeof  o == 'object' && name in o ? o[name] : [];
+    },
     row_clicked(e){ this.activeEntID = e.EntID; console.log('row_clicked=>',e);   },
     row_dblclicked(e){
       console.log('row dblclicked e,this',e,this);

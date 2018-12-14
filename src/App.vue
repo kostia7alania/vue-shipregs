@@ -32,19 +32,22 @@ export default {
       let mt = test(data.timeTo.mm)
       let df = test(data.ed_DateFrom)
       let url = `${this.url}?action=getUsers&port=${p}&HoursFrom=${hf}&MinsFrom=${mf}&HoursTo=${ht}&MinsTo=${mt}&ed_DateFrom=${df}`;
-      
-      this.searchResult =  searchResultItems_test
+      this.searchResult = null;
+      //this.searchResult =  searchResultItems_test
       if(1){ // test
         console.log('ПРИНЯЛИ !graf_refresh')
         axios.get(url)
-        .then(res=>{ 
+        .then(res=>{
           let data = res.data;
-          if(typeof data != 'object') throw 'данные не пришли';
+          if(typeof data == 'string' && data.match('SQL')!=null ) throw 'MS SQL ERROR!'
+          window.data = data; 
+          try{data = JSON.parse(data.replace(/&quot;/gim,'"'))}catch(e){console.log('[catch] [err] ->',e);throw 'Невозможно спарсить данные, пришедшие с сервера!'}
+          if( typeof data != 'object' ) throw 'данные не пришли';
           this.searchResult = data;  
         })
         .catch(err=>{
           console.warn('ОШИБКА в аксиосе => ', err);
-          alert('Ошибка!')
+          alert('Ошибка ' + err)
         })
       }
     }

@@ -14,7 +14,10 @@ export default {
     return { 
       timeValue: {  HH: null, mm: null }
       }
-  } 
+  },
+  mounted(){
+    this.timeValue = this.value;
+  }
 };
 </script>
 <style>
