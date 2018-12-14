@@ -1,24 +1,51 @@
 <template>
     <div id="search-result"> 
-    <b-container fluid > 
-     <table class="table table-bordered">
-  <thead> <tr> <th scope="col" v-for="f in FIELDS" :key="f">{{f}}</th>  </tr> </thead>
-  <tbody>
-    <tr> <th :colspan="FIELDS.length">1. ЗАХОД С МОРЯ</th> </tr>
-    <tr> <th class="text-left" :colspan="FIELDS.length">14.11.2018</th> </tr>
-    
-    <tr v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
-      <td v-for="(f,ii) in FIELDS" :key="f">
-        <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
-        <span v-else>{{f}}</span>
-      </td>
-    </tr>
-    
-     
-    
-  </tbody>
-</table>
+    <b-container fluid >
+   
+  <div class="row">
+    <b-table responsive @after-appear=""
+          @row-clicked="row_clicked"
+          @row-dblclicked="row_dblclicked"
+          show-empty 
+          small dark
+          empty-text="Нет элементов для отображения"
+          stacked="xl"
+          striped hover
+          caption-top	 
+          :fields="fields" 
+          :items="itemsComputed"
+          @filtered="onFiltered"
+          >
+
+      <span slot="html" slot-scope="data" v-html="data.value"></span>
  
+ 
+       <template slot="CompanyName" slot-scope="row">
+        <!-- We use @click.stop here to prevent a 'row-clicked' event from also happening -->
+        <b-button size="sm" @click.stop="info(row.item, row.index, $event.target)" class="mr-1">
+          Info modal
+        </b-button>
+        <b-button size="sm" @mouseover=" ">
+          {{ row.detailsShowing ? 'Hide' : 'Show' }} Details {{row-details}}
+        </b-button>
+      </template>
+      <template slot="row-details" slot-scope="row">
+        <b-card>
+          SEX!
+          <ul>
+            <li v-for="(value, key) in row.item" :key="key">{{ key }}: {{ value}}</li>
+          </ul>
+        </b-card>
+      </template>
+ 
+    </b-table>
+  </div>
+
+    <b-row>
+      <b-col md="6" class="my-1">
+        <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
+      </b-col>
+    </b-row>
     
     </b-container>
 
@@ -39,22 +66,7 @@ export default {
       currentPage: 1,
       perPage: 5,
       totalRows: 0,
-      pageOptions: [ 5, 10, 15 ],
-
-      FIELDS:[
-        'N пп',
-        'Название судна, длина',
-        'Тип судна',
-        'Флаг',
-        'Осадка',
-        'Надводный габарит',
-        'Время начала движ.',
-        'Маршрут',
-        'Причал/якорная стоянка',
-        'Агентская компания',
-        'Лоцм. обеспечение',
-        'Примечание'
-      ]
+      pageOptions: [ 5, 10, 15 ], 
     };
   }, 
   computed: { 

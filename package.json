@@ -14,6 +14,7 @@
     "bootstrap-vue": "^2.0.0-rc.11",
     "moment": "^2.23.0",
     "pikaday": "^1.8.0",
+    "surge": "^0.20.1",
     "vue": "^2.5.17",
     "vue-good-table": "^2.16.0",
     "vue2-timepicker": "^0.1.4"

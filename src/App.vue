@@ -34,7 +34,7 @@ export default {
       let url = `${this.url}?action=getUsers&port=${p}&HoursFrom=${hf}&MinsFrom=${mf}&HoursTo=${ht}&MinsTo=${mt}&ed_DateFrom=${df}`;
       
       this.searchResult =  searchResultItems_test
-      if(0){ // test
+      if(1){ // test
         console.log('ПРИНЯЛИ !graf_refresh')
         axios.get(url)
         .then(res=>{ 
