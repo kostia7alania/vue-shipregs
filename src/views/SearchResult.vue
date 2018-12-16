@@ -218,6 +218,13 @@
  
 
 <style scoped lang="scss">
+
+table {
+  display: block;
+  height: 333px;
+  overflow-y: scroll;
+}
+
   .wrapper {
     display: flex;
     flex-direction: column;
