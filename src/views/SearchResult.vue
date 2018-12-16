@@ -231,7 +231,9 @@
 
 .second-table {
   display: block;
-  max-height:444px; 
+  max-height:333px; 
+  height:333px; 
+  min-height:333px; 
   overflow-y: auto;
 }
 
