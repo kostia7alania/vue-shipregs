@@ -11,6 +11,11 @@ Vue.use(BootstrapVue)
 Vue.use(VuePikaday)
 Vue.config.productionTip = false
 
+
+window.$ = window.jQuery = require('jquery'); 
+window.bootstrapTable = require('bootstrap-table');
+ 
+window.axios = require('axios');
 new Vue({
   render: h => h(App),
 }).$mount('#app')

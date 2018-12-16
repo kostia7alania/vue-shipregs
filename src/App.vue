@@ -11,7 +11,6 @@ import SearchPanel from './views/SearchPanel.vue'
 import SearchResult from './views/SearchResult.vue'
 import { searchResultItems_test } from "./assets/searchResultItems_test.js";
 
-window.axios = require('axios');
 
 export default {
   name: 'app',
@@ -19,7 +18,7 @@ export default {
   data(){
     return {
       searchResult: null,
-      url: 'https://portcall.marinet.ru/grafics/graf/db_grafics.php'
+      url: 'https://localhost/grafics/graf/db_grafics.php'
     }
   },
   methods: {
@@ -33,8 +32,8 @@ export default {
       let df = test(data.ed_DateFrom)
       let url = `${this.url}?action=getUsers&port=${p}&HoursFrom=${hf}&MinsFrom=${mf}&HoursTo=${ht}&MinsTo=${mt}&ed_DateFrom=${df}`;
       this.searchResult = null;
-      //this.searchResult =  searchResultItems_test
-      if(1){ // test
+      this.searchResult =  searchResultItems_test
+      if(0){ // test
         console.log('ПРИНЯЛИ !graf_refresh')
         axios.get(url)
         .then(res=>{
