@@ -76,7 +76,9 @@ export default {
  </style>
 <style scoped>
 .search-panel {
-  padding:10px;
+  padding:33px !important;
+  margin:10px;
+  text-align:center;
 }
 
 @media (max-width: 767px) {
@@ -97,7 +99,6 @@ export default {
     align-items: center;
     
     justify-content: center; 
-    width: 100%;
-    padding: 0 10px;
+    width: 100%; 
 }
 </style>

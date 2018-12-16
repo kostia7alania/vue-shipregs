@@ -1,21 +1,25 @@
 <template>
   <div id="search-result" class="wrapper">
-   
-        <b-container fluid class="first-table">
+    
+        <b-container fluid class="first-table drop">
           <table class="my-table">
-            <thead class="table-header">
-              <tr>
-                <th v-for="f in FIELDS" :key="f">{{f}}</th>
+            <thead v-show="items" >
+              <tr  @dragover="drag_handler" class="table-header">
+                <th v-for="f in FIELDS" :key="f">
+                 <b>{{f}}</b>
+                </th>
               </tr>
             </thead>
             <tbody class="table-content">
               <template v-for="itm_arr in items">
                 <template v-for="(k,index) in parseKey(itm_arr.arr)">
                   <!--заголовки разделов-->
-                  <tr v-if="index==0" :key="JSON.stringify(k) +  JSON.stringify(itm_arr) +  index + 1"> <td colspan="12" ><b>{{itm_arr.header}}</b></td></tr>
+                  <tr class="table-header" v-if="index==0" :key="JSON.stringify(k) +  JSON.stringify(itm_arr) +  index + 1">
+                    <th colspan="12" ><b>{{itm_arr.header}}</b></th>
+                  </tr>
                   <!-- даты -->
                   <tr :key="JSON.stringify(k) + JSON.stringify(itm_arr) + index + 2"> <td style="text-align:left" colspan="12"><b>{{k}}</b></td>  </tr>
-                  <tr v-for="(e,i) in itm_arr.arr[k]" :key="JSON.stringify(e)+i+index+k + 2">
+                  <tr @drag="drag_handler" v-for="(e,i) in itm_arr.arr[k]" :key="JSON.stringify(e)+i+index+k + 2">
                     <td class="font-weight-bold">{{++i}}</td>
                     <td>{{e.CompanyName}}</td>
                     <td>{{e.CountryNameRus}}</td>
@@ -33,32 +37,46 @@
               </template>
             </tbody>
           </table>
-        </b-container>
+        </b-container> 
   
+	
+
         <b-container fluid  class="second-table">
           <table class="table table-bordered my-table">
             <tbody>
               <tr class="table-header"> <th :colspan="FIELDS.length">К перетаскиванию</th> </tr>
-              <tr v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
-                <td v-for="(f,ii) in FIELDS" :key="f">
-                  <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
-                  <span v-else>{{f}}</span>
-                </td>
-              </tr>  
+              
+                <tr draggable="true" class="drag" v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
+                 
+                  <td v-for="(f,ii) in FIELDS" :key="f">
+                      
+                      <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
+                      <span v-else>{{f}}</span>
+                    
+                  </td>
+                  
+                </tr>  
+              
             </tbody>
           </table> 
         </b-container>
+      
 
       </div>
 </template>
 
 <script>
   import {
-    searchResultFields_test
+   searchResultFields_test
   } from "../assets/searchResultFields_test.js";
   
+
+import { Drag, Drop } from 'vue-drag-drop';
+ 
+
   export default {
     name: "search-result",
+    components: { Drag, Drop }, 
     props: ["searchResult"],
     data() {
       return {
@@ -160,21 +178,19 @@
       }
     },
     mounted() {
+      event.dataTransfer.dropEffect = "copy";
       jQuery.fn.bootstrapTable.defaults.formatNoMatches = () => {}; //удаляем ошибку при поиске  - баг? хз
       jQuery.fn.bootstrapTable.defaults.search = false;
-  
-      $('.my-table').bootstrapTable({
-  
-        formatLoadingMessage: function() {
-          return '';
-        }
-      });
-  
-  
-  
+      $('.my-table').bootstrapTable({   formatLoadingMessage: function() { return '';}    });
     },
     updated() {},
-    methods: {
+    methods: {	
+      drag_handler(e){
+        console.log('sex=>',e)
+      },
+      handleDrop(data) {
+				alert(`You dropped with data: ${JSON.stringify(data)}`);
+			},
       parseKey(key) {
         return typeof key == "object" ? Object.keys(key) : "";
       },
