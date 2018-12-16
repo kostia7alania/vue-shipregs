@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid class="search-panel"> 
+    <b-container class="search-panel"> 
 
     <b-row class="search-filters">  
       
@@ -75,7 +75,9 @@ export default {
   .legends{ display: contents !important; }
  </style>
 <style scoped>
-
+.search-panel {
+  padding:10px;
+}
 
 @media (max-width: 767px) {
   .graf_refresh {order: 5; }

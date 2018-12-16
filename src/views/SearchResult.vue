@@ -1,7 +1,6 @@
 <template>
-  <div id="search-result">
-  
-    <div class="wrapper"> 
+  <div id="search-result" class="wrapper">
+   
         <b-container fluid class="first-table">
           <table class="my-table">
             <thead class="table-header">
@@ -11,58 +10,46 @@
             </thead>
             <tbody class="table-content">
               <template v-for="itm_arr in items">
-              <template v-for="(k,index) in parseKey(itm_arr.arr)">
-                <!--заголовки разделов-->
-                <tr v-if="index==0" :key="JSON.stringify(k) +  JSON.stringify(itm_arr) +  index + 1"> <td colspan="12" ><b>{{itm_arr.header}}</b></td></tr>
-                <!-- даты -->
-                <tr :key="JSON.stringify(k) + JSON.stringify(itm_arr) + index + 2"> <td style="text-align:left" colspan="12"><b>{{k}}</b></td>  </tr>
-                <tr v-for="(e,i) in itm_arr.arr[k]" :key="JSON.stringify(e)+i+index+k + 2">
-                  <td class="font-weight-bold">{{++i}}</td>
-                  <td>{{e.CompanyName}}</td>
-                  <td>{{e.CountryNameRus}}</td>
-                  <td>{{e.DateEnter}}</td>
-                  <td>{{e.DateEnter}}</td>
-                  <td>{{e.DateEnter}}</td>
-                  <td>{{e.DateEnter}}</td>
-                  <td>{{e.Length}}</td>
-                  <td>{{e.DateEnter}}</td>
-                  <td>{{e.DateEnter}}</td>
-                  <td>{{e.DateEnter}}</td>
-                  <td>{{e.DateEnter}}</td>
-                </tr>
-</template>
-          </template>
-        </tbody>
-      </table>
-    </b-container>
- 
- 
-    <b-container fluid  class="second-table">
-     <table class="table table-bordered">
-       <tbody>
-        <tr class="table-header"> <th :colspan="FIELDS.length">К перетаскиванию</th> </tr>
-        <tr v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
-          <td v-for="(f,ii) in FIELDS" :key="f">
-            <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
-            <span v-else>{{f}}</span>
-          </td>
-        </tr> 
-        
-      </tbody>
-    </table>
-
-    </b-container> 
-      </div> 
-      
-  </div>
-
-
-
+                <template v-for="(k,index) in parseKey(itm_arr.arr)">
+                  <!--заголовки разделов-->
+                  <tr v-if="index==0" :key="JSON.stringify(k) +  JSON.stringify(itm_arr) +  index + 1"> <td colspan="12" ><b>{{itm_arr.header}}</b></td></tr>
+                  <!-- даты -->
+                  <tr :key="JSON.stringify(k) + JSON.stringify(itm_arr) + index + 2"> <td style="text-align:left" colspan="12"><b>{{k}}</b></td>  </tr>
+                  <tr v-for="(e,i) in itm_arr.arr[k]" :key="JSON.stringify(e)+i+index+k + 2">
+                    <td class="font-weight-bold">{{++i}}</td>
+                    <td>{{e.CompanyName}}</td>
+                    <td>{{e.CountryNameRus}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.Length}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                  </tr>
+                </template>
+              </template>
+            </tbody>
+          </table>
+        </b-container>
   
-  </div>
- 
+        <b-container fluid  class="second-table">
+          <table class="table table-bordered my-table">
+            <tbody>
+              <tr class="table-header"> <th :colspan="FIELDS.length">К перетаскиванию</th> </tr>
+              <tr v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
+                <td v-for="(f,ii) in FIELDS" :key="f">
+                  <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
+                  <span v-else>{{f}}</span>
+                </td>
+              </tr>  
+            </tbody>
+          </table> 
+        </b-container>
 
-
+      </div>
 </template>
 
 <script>
@@ -174,7 +161,7 @@
     },
     mounted() {
       jQuery.fn.bootstrapTable.defaults.formatNoMatches = () => {}; //удаляем ошибку при поиске  - баг? хз
-      jQuery.fn.bootstrapTable.defaults.search = true;
+      jQuery.fn.bootstrapTable.defaults.search = false;
   
       $('.my-table').bootstrapTable({
   
@@ -213,6 +200,7 @@
  
 
 <style scoped lang="scss">
+
 .table-header th {
   position: -webkit-sticky;
   position: sticky;
@@ -221,17 +209,32 @@
   background-color: rgb(27,30,36);
   color: rgb(220,220,220);
 }
+
+
+.wrapper {
+	justify-content:space-between;
+	flex-direction: column;
+	display: flex;
+	height: 100vh;
+  margin: 0px !important;
+}
+
+.wrapper > div {
+	border: 1px solid #696989;
+}
+
 .first-table {
   display: block;
-  height: calc(333px);
+  height: auto;
   overflow-y: auto;
 }
 
 .second-table {
   display: block;
-  height: 333px;
+  max-height:444px; 
   overflow-y: auto;
 }
+
 
   .wrapper {
     display: flex;
@@ -256,53 +259,6 @@
       ;
     }
     */
-  
-  @media (max-width: 723px) {
-    .order1-845 {
-      order: 1;
-    }
-    .order0-845 {
-      order: 0;
-      margin-bottom: 10px;
-    }
-  }
-  
-  .row.justify-content-left.my-col.m-10.show-1500px-m.align-items-center {
-    width: 100%;
-  }
-  
-  .my-btns button {
-    padding: 7px 10px;
-    margin-right: 10px;
-    border-radius: 6px;
-    border: none;
-  }
-  
-  .my-btns {
-    display: flex;
-    margin-right: 0px;
-    min-width: 400px !important;
-  }
-  
-  .padding-left0 {
-    padding-left: 0px;
-  }
-  
-  @media (min-width: 1300px) {
-    .show-1500px-m {
-      display: none;
-    }
-    .show-1500px-p {
-      display: block;
-    }
-  }
-  
-  @media (max-width: 1300px) {
-    .show-1500px-m {
-      display: block;
-    }
-    .show-1500px-p {
-      display: none;
-    }
-  }
+    
+   
 </style>

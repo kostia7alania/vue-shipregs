@@ -55,6 +55,16 @@ export default {
 </script>
 
 <style>
+
+#app {
+	/*justify-content:space-between;*/
+	flex-direction: column;
+	display: flex;
+	height: 100vh;
+  margin: 0px !important;
+}
+
+
 button {
   background-color: #4CAF50; /* Green */
   border: none;
