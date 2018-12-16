@@ -1,9 +1,8 @@
 <template>
   <div id="search-result">
   
-    <div class="wrapper">
-      <div class="content">
-        <b-container fluid>
+    <div class="wrapper"> 
+        <b-container fluid class="first-table">
           <table class="my-table">
             <thead class="table-header">
               <tr>
@@ -36,15 +35,12 @@
         </tbody>
       </table>
     </b-container>
-
-    </div>
- <div class="footer">
-    <b-container fluid>
+ 
+ 
+    <b-container fluid  class="second-table">
      <table class="table table-bordered">
        <tbody>
-        <tr> <th :colspan="FIELDS.length">1. ЗАХОД С МОРЯ</th> </tr>
-        <tr> <th class="text-left" :colspan="FIELDS.length">14.11.2018</th> </tr>
-        
+        <tr class="table-header"> <th :colspan="FIELDS.length">К перетаскиванию</th> </tr>
         <tr v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
           <td v-for="(f,ii) in FIELDS" :key="f">
             <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
@@ -55,8 +51,7 @@
       </tbody>
     </table>
 
-    </b-container>
-    </div>
+    </b-container> 
       </div> 
       
   </div>
@@ -218,17 +213,30 @@
  
 
 <style scoped lang="scss">
+.table-header th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+  background-color: rgb(27,30,36);
+  color: rgb(220,220,220);
+}
+.first-table {
+  display: block;
+  height: calc(333px);
+  overflow-y: auto;
+}
 
-table {
+.second-table {
   display: block;
   height: 333px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
   .wrapper {
     display: flex;
     flex-direction: column;
-    &>.footer {background: gray;}
+    &>.second-table {background: gray;}
   }
   
   
