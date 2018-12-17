@@ -1,69 +1,80 @@
 <template>
   <div id="search-result" class="wrapper">
-
-        <div class="first-table drop overflow"> 
-          <!--
-          <div class='tr tr-th'>
-            <div v-for="f in FIELDS" :key="f">  <b>{{f}}</b>  </div>
-          </div>
-          -->
-          <div class="my-table"  v-show="items_any_available">
-            <div class="table-content">
-                  <div class="tr tr-th tr-th-main"> 
-                    <div v-for="ff in FIELDS" :key="ff">{{ff}}</div>
-                   </div>  
- 
+    
+        <b-container fluid class="first-table drop">
+          <table class="my-table"  v-show="items_any_available">
+            <thead >
+              <tr @dragover="drag_handler" class="table-header">
+                <th v-for="f in FIELDS" :key="f"> 
+                 <b>{{f}}</b>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="table-content">
               <template v-for="itm_arr in items">
                 <template v-for="(k,index) in parseKey(itm_arr.arr)">
-
                   <!--заголовки разделов-->
-                  <div  class="tr tr-th tr-th-second" :key="JSON.stringify(k) +  JSON.stringify(itm_arr) +  index + 1">
-                    <div v-if="index==0"><b>{{itm_arr.header}}</b></div>
-                  </div>
+                  <tr class="table-header" v-if="index==0" :key="JSON.stringify(k) +  JSON.stringify(itm_arr) +  index + 1">
+                    <th colspan="12" ><b>{{itm_arr.header}}</b></th>
+                  </tr>
                   <!-- даты -->
-                  <div class="tr tr-th2" :key="JSON.stringify(k) + JSON.stringify(itm_arr) + index + 2"> <div style="text-align:left"><b>{{k}}</b></div>  </div>
-                  <div class="tr tr-td" @drag="drag_handler" @dragstart="dragstart_handler" v-for="(e,i) in itm_arr.arr[k]" :key="JSON.stringify(e)+i+index+k + 2">
-                    <div class="font-weight-bold">{{++i}}</div>
-                    <div>{{e.CompanyName}}</div>
-                    <div>{{e.CountryNameRus}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.Length}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                  </div>
+                  <tr :key="JSON.stringify(k) + JSON.stringify(itm_arr) + index + 2"> <td style="text-align:left" colspan="12"><b>{{k}}</b></td>  </tr>
+                  <tr @drag="drag_handler" @dragstart="dragstart_handler" v-for="(e,i) in itm_arr.arr[k]" :key="JSON.stringify(e)+i+index+k + 2">
+                    <td class="font-weight-bold">{{++i}}</td>
+                    <td>{{e.CompanyName}}</td>
+                    <td>{{e.CountryNameRus}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.Length}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                    <td>{{e.DateEnter}}</td>
+                  </tr>
                 </template>
               </template>
-            </div>
-          </div>
-        </div> 
+            </tbody>
+          </table>
+        </b-container> 
   
-        <div class="second-table overflow">
-          <div class="table table-bordered my-table"> 
-              <div class="tr tr-th tr-th-footer"> <div :colspan="FIELDS.length">К перетаскиванию</div> </div>
+	
+
+        <b-container fluid  class="second-table">
+          <table class="table table-bordered my-table">
+            <tbody>
+              <tr class="table-header"> <th :colspan="FIELDS.length">К перетаскиванию</th> </tr>
               
-                <div draggable="true" class="drag tr" v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
+                <tr draggable="true" class="drag" v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
                  
-                  <div v-for="(f,ii) in FIELDS" :key="f">
+                  <td v-for="(f,ii) in FIELDS" :key="f">
+                      
                       <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
                       <span v-else>{{f}}</span>
-                  </div>
+                    
+                  </td>
                   
-                </div>   
-          </div> 
-        </div>
+                </tr>  
+              
+            </tbody>
+          </table> 
+        </b-container>
+      
 
       </div>
 </template>
 
 <script>
-import { searchResultFields_test  } from "../assets/searchResultFields_test.js";
+  import {
+   searchResultFields_test
+  } from "../assets/searchResultFields_test.js";
+  
+
 import { Drag, Drop } from 'vue-drag-drop';
-export default {
+ 
+
+  export default {
     name: "search-result",
     components: { Drag, Drop }, 
     props: ["searchResult"],
@@ -111,19 +122,40 @@ export default {
           }
         ];
       },
-      items_any_available () {
+      items_any_available(){
         return ['first','second','third','fourth','fifth'].some(e=>typeof this.parseRow(e) === 'object' && (Object.keys(this.parseRow(e))).length)
       },
-      items_first() {return this.parseRow("first");},
-      items_second(){return this.parseRow("second");},
-      items_third() {return this.parseRow("third");},
-      items_fourth(){return this.parseRow("fourth");},
-      items_fifth() {return this.parseRow("fifth");}, 
-      keys_first() {return this.parseKey(this.items_first);},
-      keys_second(){return this.parseKey(this.items_second);},
-      keys_third() {return this.parseKey(this.items_third);},
-      keys_fourth(){return this.parseKey(this.items_fourth);},
-      keys_fifth() {return this.parseKey(this.items_fifth);},
+      items_first() {
+        return this.parseRow("first");
+      },
+      items_second() {
+        return this.parseRow("second");
+      },
+      items_third() {
+        return this.parseRow("third");
+      },
+      items_fourth() {
+        return this.parseRow("fourth");
+      },
+      items_fifth() {
+        return this.parseRow("fifth");
+      },
+  
+      keys_first() {
+        return this.parseKey(this.items_first);
+      },
+      keys_second() {
+        return this.parseKey(this.items_second);
+      },
+      keys_third() {
+        return this.parseKey(this.items_third);
+      },
+      keys_fourth() {
+        return this.parseKey(this.items_fourth);
+      },
+      keys_fifth() {
+        return this.parseKey(this.items_fifth);
+      },
   
       itemsComputed() {
         //_rowVariant: 'danger'
@@ -142,8 +174,6 @@ export default {
     },
     watch: {
       items() {
-        console.log('items watch')
-        setTimeout(e=>resizer(),100);
         this.app_number = null;
       },
       searchActiveTab_computed: function() {
@@ -151,19 +181,10 @@ export default {
       }
     },
     mounted() {
-      let resizer = window.resizer = e => { 
-        let h = document.querySelector('.tr-th-main').offsetHeight;
-        let d =  document.querySelectorAll('.tr-th-second');
-        d.forEach(e=>e.style.top = h+'px ');
-      }
-      
-      window.onresize = resizer;
-      /*event.dataTransfer.dropEffect = "copy";
-     
+      event.dataTransfer.dropEffect = "copy";
       jQuery.fn.bootstrapTable.defaults.formatNoMatches = () => {}; //удаляем ошибку при поиске  - баг? хз
       jQuery.fn.bootstrapTable.defaults.search = false;
       $('.my-table').bootstrapTable({   formatLoadingMessage: function() { return '';}    });
-      */
     },
     updated() {},
     methods: {	
@@ -201,31 +222,12 @@ export default {
 </script>
  
 
-<style lang="scss">
-.tr {
-  display: flex;
-  flex-direction: row;
-  & > div {
-    flex:1;
-    border: 1px solid;
-  }
-}
-.div-header{
-  display: flex;
-  justify-content: space-between;
-  & > div {
-    flex:1;
-    border: 1px solid;
-  }
-}
- 
- .tr-th-footer,
- .tr-th-main {
-  top: 0px;
- } 
-.tr-th {
+<style scoped lang="scss">
+
+.table-header th {
   position: -webkit-sticky;
   position: sticky;
+  top: 0px;
   z-index: 1;
   background-color: rgb(27,30,36);
   color: rgb(220,220,220);
@@ -240,14 +242,22 @@ export default {
   margin: 0px !important;
 }
 
+.wrapper > div {
+	border: 1px solid #696989;
+}
 
-.overflow { overflow: auto; }
+.first-table {
+  display: block;
+  height: auto;
+  overflow-y: auto;
+}
 
 .second-table {
   display: block;
   max-height:333px; 
   height:333px; 
-  min-height:333px;  
+  min-height:333px; 
+  overflow-y: auto;
 }
 
 
@@ -255,7 +265,25 @@ export default {
     display: flex;
     flex-direction: column;
     &>.second-table {background: gray;}
-  } 
+  }
+  
+  
+  /*.table-row,
+    .table-header {
+      display: flex;
+      &>* {
+        padding: 4px;
+        margin: 0px;
+        border: 1px solid;
+      }
+    }
+    
+    .my-table {
+      display: flex;
+      flex-direction: column;
+      ;
+    }
+    */
     
    
 </style>

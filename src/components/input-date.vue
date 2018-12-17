@@ -58,7 +58,7 @@ export default {
 }
 
 span.input-date span {
-    padding-top: 5px;
+    /*padding-top: 5px;*/
 }
 
   .input-date {  width: 100%;  display: flex;  }
