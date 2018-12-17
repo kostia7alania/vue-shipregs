@@ -1,7 +1,11 @@
 <template>
   <div id="search-result" class="wrapper">
 
-        <div class="first-table drop overflow"> 
+        <div  class="first-table overflow drag-to" :class="{over: over}"
+              @dragover="dragover_handler" 
+              @dragleave="dragleave_handler"
+              @drag="drag_handler"
+              @dragend="dragend_handler">
           <!--
           <div class='tr tr-th'>
             <div v-for="f in FIELDS" :key="f">  <b>{{f}}</b>  </div>
@@ -22,10 +26,10 @@
                   </div>
                   <!-- даты -->
                   <div class="tr tr-th2" :key="JSON.stringify(k) + JSON.stringify(itm_arr) + index + 2"> <div style="text-align:left"><b>{{k}}</b></div>  </div>
-                  <div class="tr tr-td" @drag="drag_handler" @dragstart="dragstart_handler" v-for="(e,i) in itm_arr.arr[k]" :key="JSON.stringify(e)+i+index+k + 2">
+                  <div class="tr tr-td" v-for="(e,i) in itm_arr.arr[k]" :key="JSON.stringify(e)+i+index+k + 2">
                     <div class="font-weight-bold">{{++i}}</div>
                     <div>{{e.CompanyName}}</div>
-                    <div>{{e.CountryNameRus}}</div>
+                    <div>{{e.CompanyName}}</div>
                     <div>{{e.DateEnter}}</div>
                     <div>{{e.DateEnter}}</div>
                     <div>{{e.DateEnter}}</div>
@@ -35,6 +39,11 @@
                     <div>{{e.DateEnter}}</div>
                     <div>{{e.DateEnter}}</div>
                     <div>{{e.DateEnter}}</div>
+                    <div>{{e.DateEnter}}</div>
+                    <div>
+                      <button @click="v_handler(e.EntID)">V</button>
+                      <button @click="o_handler(e.EntID)">O</button>
+                    </div>
                   </div>
                 </template>
               </template>
@@ -42,11 +51,17 @@
           </div>
         </div> 
   
-        <div class="second-table overflow">
+        <div  class="second-table overflow drag-from"
+                  
+           >
           <div class="table table-bordered my-table"> 
-              <div class="tr tr-th tr-th-footer"> <div :colspan="FIELDS.length">К перетаскиванию</div> </div>
+              <div class="tr tr-th tr-th-footer"> <div>К перетаскиванию</div> </div>
               
-                <div draggable="true" class="drag tr" v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
+                <div draggable="true"
+                  @dragstart="dragstart_handler"
+                  @dragend="dragend_handler($event,i)"
+                  @drag="drag_handler"
+                 class="drag tr" v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
                  
                   <div v-for="(f,ii) in FIELDS" :key="f">
                       <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
@@ -69,6 +84,8 @@ export default {
     props: ["searchResult"],
     data() {
       return {
+        over: false,
+
         activeEntID: null,
         currentPage: 1,
         perPage: 5,
@@ -87,7 +104,9 @@ export default {
           "Причал/якорная стоянка",
           "Агентская компания",
           "Лоцм. обеспечение",
-          "Примечание"
+          "Груз",
+          "Примечание",
+          "Действия"
         ]
       };
     },
@@ -100,14 +119,21 @@ export default {
         return [{
             header: "1. ЗАХОД С МОРЯ",
             arr: this.parseRow("first")
-          },
-          {
-            header: "2. Переход на МОРЯ",
+          },{
+            header: "2. ВЫХОД В МОРЕ",
             arr: this.parseRow("second")
-          },
-          {
-            header: "3. Подкат к МОРЯ",
+          },{
+            header: "3. ВНУТРИПОРТОВЫЕ ПЕРЕМЕЩЕНИЯ",
             arr: this.parseRow("third")
+          },{
+            header: "4. ВЫХОД НА ВВП",
+            arr: this.parseRow("fourth")
+          },{
+            header: "5. ТРАНЗИТ НА ВВП",
+            arr: this.parseRow("fifth")
+          },{
+            header: "6. ЗАХОД С ВВП",
+            arr: this.parseRow("sixth")
           }
         ];
       },
@@ -166,36 +192,79 @@ export default {
       */
     },
     updated() {},
-    methods: {	
-      dragstart_handler(e){
-        alert(1111)
+    methods: {
+      v_handler(e){ 
+        alert('v=>'+e);
       },
-      drag_handler(e){
-        console.log('sex=>',e)
-       
+      o_handler(e){
+        alert("o=>"+e);
       },
-      handleDrop(data) {
-				alert(`You dropped with data: ${JSON.stringify(data)}`);
-			},
       parseKey(key) {
         return typeof key == "object" ? Object.keys(key) : "";
       },
       parseRow(name) {
         let o = this.searchResult;
         return o && typeof o == "object" && name in o ? o[name] : [];
+      }, 
+        
+      dragstart_handler(e){
+        e.target.style.opacity = '0.4'; 
+        e.dataTransfer.effectAllowed = 'all'; /*разрешенные события у драговера и энтера - значения е.dataTransfer.dropEffect */
+        e.dataTransfer.setData('text',111);
+        console.log(e.dataTransfer);
+  //-> тащим иконку:
+        let dragIcon = document.createElement('img');
+        dragIcon.src = 'https://ru.seaicons.com/wp-content/uploads/2016/06/Files-Upload-File-icon.png';
+        dragIcon.width = 100;
+        e.dataTransfer.setDragImage(dragIcon, 0, 0);
       },
-      row_clicked(e) {
-        this.activeEntID = e.EntID;
-        console.log("row_clicked=>", e);
+
+      dragend_handler(e,i){ //отпускаем в нужном месте, в "е" -- исходная(нужная) нода!
+        e.target.style.opacity = '1'; 
+        //e.target.classList.remove('over');
+        this.over = false;
+        this.delete_over(); // убираем бордюр 
+        alert('перетащили -> '+i)
       },
-      row_dblclicked(e) {
-        console.log("row dblclicked e,this", e, this);
+      dragover_handler(e) {
+        this.delete_over(); // убираем бордюр
+        let t = e.target;
+        if(t.classList.contains('tr')){
+          t.classList.add('over')
+          console.log(1);
+        }
+        else if(t.parentElement.classList.contains('tr')) {
+          t.parentElement.classList.add('over');
+          console.log(2);
+        }
+        else if(t.parentElement.parentElement.classList.contains('tr')){
+          t.parentElement.parentElement.classList.add('over');
+          console.log(3);
+        }
+        else if(t.parentElement.parentElement.parentElement.classList.contains('tr')){
+          t.parentElement.parentElement.parentElement.classList.add('over');
+          console.log(4);
+        }
+        e.preventDefault(); 
+        e.dataTransfer.dropEffect = 'copy'; //none, copy, link, move.
+        return false;
       },
-      onFiltered(filteredItems) {
-        // Trigger pagination to update the number of buttons/pages due to filtering
-        this.totalRows = filteredItems.length;
-        this.currentPage = 1;
-      }
+      dragenter_handler(e) {
+        e.target.classList.add('over'); 
+        this.over = true;
+      },
+      dragleave_handler(e){
+        e.target.classList.remove('over');
+        this.over = false;
+      },
+      drag_handler(e){
+        let s = e.target.stopPropagation;
+        if(s) s()  // See the section on the DataTransfer object.
+        return false;
+      },
+      delete_over(){
+        document.querySelectorAll('.over').forEach(e=>e.classList.remove('over'))
+      },
     }
   };
 </script>
@@ -257,5 +326,6 @@ export default {
     &>.second-table {background: gray;}
   } 
     
-   
+.over { border: 2px dashed red !important;}
+.drag-from { cursor: pointer; }
 </style>
