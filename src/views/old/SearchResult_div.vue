@@ -22,7 +22,7 @@ import MyTable from './MyTable';
 export default {
   name: "search-result",
   components: { VueGoodTable, MyTable},
-  props: ["searchResult"],
+  props: ["getUsersResult"],
   data() {
     return {
       activeEntID: null,
@@ -37,14 +37,14 @@ export default {
   },
   computed: {
     first(){
-      let s = this.searchResult; 
+      let s = this.getUsersResult; 
       return s && s!=null && typeof s == 'object' && 'first' in s ? s.first: false;
     },
     fields() {
       return searchResultFields_test;
     },
     items() {
-      let o = this.searchResult;
+      let o = this.getUsersResult;
       if (o && typeof o == "object" && "first" in o) return o.first;
     },
     itemsComputed() {

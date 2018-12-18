@@ -1,61 +1,46 @@
 <template>
   <div id="search-result" class="wrapper">
 
-        <div  class="first-table overflow drag-to" :class="{over: over}"
-              @dragover="dragover_handler" 
-              @dragleave="dragleave_handler"
-              @drag="drag_handler"
-              @dragend="dragend_handler">
+        <div class="first-table" :style="{overflow: overflow}">
           <!--
           <div class='tr tr-th'>
             <div v-for="f in FIELDS" :key="f">  <b>{{f}}</b>  </div>
           </div>
           -->
-          <div class="my-table"  v-show="items_any_available">
+          <div class="my-table" v-show="items_any_available">
             <div class="table-content">
-                  <div class="tr tr-th tr-th-main"> 
-                    <div v-for="ff in FIELDS" :key="ff">{{ff}}</div>
-                   </div>  
- 
-              <template v-for="itm_arr in items">
-                <template v-for="(k,index) in parseKey(itm_arr.arr)">
+              <div class="tr tr-th tr-th-main"> 
+                <div v-for="ff in FIELDS" :key="ff">{{ff}}</div>
+              </div>
 
-                  <!--заголовки разделов-->
-                  <div  class="tr tr-th tr-th-second" :key="JSON.stringify(k) +  JSON.stringify(itm_arr) +  index + 1">
-                    <div v-if="index==0"><b>{{itm_arr.header}}</b></div>
-                  </div>
-                  <!-- даты -->
-                  <div class="tr tr-th2" :key="JSON.stringify(k) + JSON.stringify(itm_arr) + index + 2"> <div style="text-align:left"><b>{{k}}</b></div>  </div>
-                  <div class="tr tr-td" v-for="(e,i) in itm_arr.arr[k]" :key="JSON.stringify(e)+i+index+k + 2">
-                    <div class="font-weight-bold">{{++i}}</div>
-                    <div>{{e.CompanyName}}</div>
-                    <div>{{e.CompanyName}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.Length}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>{{e.DateEnter}}</div>
-                    <div>
-                      <button @click="v_handler(e.EntID)">V</button>
-                      <button @click="o_handler(e.EntID)">O</button>
-                    </div>
-                  </div>
-                </template>
+              <template v-for="(itm_arr,itm_arr_i) in items"> 
+<!--              <p class="drag-to" v-if="itm_arr.header=='1. ЗАХОД С МОРЯ'"
+                  :class="{over: over}"
+                  @dragover="dragover_handler" 
+                  @dragleave="dragleave_handler"
+                  @drag="drag_handler"
+                  @dragend="dragend_handler" 
+                 :key='itm_arr_i'>test {{itm_arr_i}}</p>
+--> 
+                <search-result-rows 
+                  v-for="(k,index) in parseKey(itm_arr.arr)" :key="''+itm_arr_i + index"
+                  :itm_arr="itm_arr"
+                  :ROWS_headers="ROWS_headers"
+                  @header_click="header_click" 
+                  :itm_arr_i="itm_arr_i"
+                  :index="index"
+                  :k="k"
+                />
+
               </template>
             </div>
           </div>
         </div> 
   
-        <div  class="second-table overflow drag-from"
-                  
-           >
-          <div class="table table-bordered my-table"> 
-              <div class="tr tr-th tr-th-footer"> <div>К перетаскиванию</div> </div>
+        <div  class="second-table drag-from" :style="{overflow: overflow}">
+          <div class="table table-bordered my-table">
+            <!--
+              <div class="tr tr-th tr-th-footer"> <div>Внутрипортовые перемещения (черновики)</div> </div>
               
                 <div draggable="true"
                   @dragstart="dragstart_handler"
@@ -63,12 +48,23 @@
                   @drag="drag_handler"
                  class="drag tr" v-for="(e,i) in new Array(111).fill(11)" :key="i"> 
                  
-                  <div v-for="(f,ii) in FIELDS" :key="f">
+                  <div v-for="(f,ii) in FIELDS" :key="f ">
                       <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
                       <span v-else>{{f}}</span>
-                  </div>
-                  
+                  </div> 
                 </div>   
+            -->
+              <div class="table-content">
+                <search-result-rows 
+                  v-for="(k,index) in parseKey(items_inport.arr)" :key="''+ index" 
+                  :itm_arr="items_inport"
+                  :itm_arr_i="0"
+                  :index="index"
+                  :k="k"
+                  :ROWS_headers="[ROWS_headers_inport]"
+                  :inport="true"
+                /> 
+              </div>
           </div> 
         </div>
 
@@ -78,12 +74,14 @@
 <script>
 import { searchResultFields_test  } from "../assets/searchResultFields_test.js";
 import { Drag, Drop } from 'vue-drag-drop';
+import resRows from './SearchResult_ROWS';
 export default {
     name: "search-result",
-    components: { Drag, Drop }, 
-    props: ["searchResult"],
+    components: { Drag, Drop,'search-result-rows': resRows}, 
+    props: ["getUsersResult", "getInportResult"],
     data() {
       return {
+        overflow:'auto',
         over: false,
 
         activeEntID: null,
@@ -91,7 +89,7 @@ export default {
         perPage: 5,
         totalRows: 0,
         pageOptions: [5, 10, 15],
-  
+        
         FIELDS: [
           "N пп",
           "Название судна, длина",
@@ -107,7 +105,15 @@ export default {
           "Груз",
           "Примечание",
           "Действия"
-        ]
+        ],
+        ROWS_headers: [
+            {header: "1. ЗАХОД С МОРЯ", show: 0},
+            {header: "2. ВЫХОД В МОРЕ", show: 0},
+            {header: "4. ВЫХОД НА ВВП", show: 0},
+            {header: "5. ТРАНЗИТ НА ВВП", show: 0},
+            {header: "6. ЗАХОД С ВВП", show: 0} 
+        ],
+        ROWS_headers_inport: {header: "3. ВНУТРИПОРТОВЫЕ ПЕРЕМЕЩЕНИЯ (черновики)", show: 0}
       };
     },
     computed: {
@@ -115,49 +121,22 @@ export default {
         return searchResultFields_test;
       },
       items() {
-        //return ['first','second','third','fourth','fifth'].map(e=>this.parseRow(e))
-        return [{
-            header: "1. ЗАХОД С МОРЯ",
-            arr: this.parseRow("first")
-          },{
-            header: "2. ВЫХОД В МОРЕ",
-            arr: this.parseRow("second")
-          },{
-            header: "3. ВНУТРИПОРТОВЫЕ ПЕРЕМЕЩЕНИЯ",
-            arr: this.parseRow("third")
-          },{
-            header: "4. ВЫХОД НА ВВП",
-            arr: this.parseRow("fourth")
-          },{
-            header: "5. ТРАНЗИТ НА ВВП",
-            arr: this.parseRow("fifth")
-          },{
-            header: "6. ЗАХОД С ВВП",
-            arr: this.parseRow("sixth")
-          }
-        ];
+        return ['first','second','third','fourth','fifth'].map((e,i) => {
+          return {...this.ROWS_headers[i], ...{arr: this.parseRow(e)}};
+        })
+      },
+      items_inport() { 
+          return {...this.ROWS_headers_inport, ...{ arr: this.parseRow('Inport') } }; 
       },
       items_any_available () {
         return ['first','second','third','fourth','fifth'].some(e=>typeof this.parseRow(e) === 'object' && (Object.keys(this.parseRow(e))).length)
-      },
-      items_first() {return this.parseRow("first");},
-      items_second(){return this.parseRow("second");},
-      items_third() {return this.parseRow("third");},
-      items_fourth(){return this.parseRow("fourth");},
-      items_fifth() {return this.parseRow("fifth");}, 
-      keys_first() {return this.parseKey(this.items_first);},
-      keys_second(){return this.parseKey(this.items_second);},
-      keys_third() {return this.parseKey(this.items_third);},
-      keys_fourth(){return this.parseKey(this.items_fourth);},
-      keys_fifth() {return this.parseKey(this.items_fifth);},
-  
+      },  
       itemsComputed() {
         //_rowVariant: 'danger'
         let itm = this.items;
         if (itm) {
           itm = itm.map((e, i) => {
-            if (e.EntID == this.activeEntID) e._rowVariant = "info";
-            //выделение активной (нажатой) строки;
+            if (e.EntID == this.activeEntID) e._rowVariant = "info"; //выделение активной (нажатой) строки;
             else e._rowVariant = "";
             e.i = ++i;
             return e;
@@ -169,69 +148,51 @@ export default {
     watch: {
       items() {
         console.log('items watch')
-        setTimeout(e=>resizer(),100);
-        this.app_number = null;
       },
       searchActiveTab_computed: function() {
         this.tabs.map(tab => (tab.active = 0));
       }
-    },
-    mounted() {
-      let resizer = window.resizer = e => { 
-        let h = document.querySelector('.tr-th-main').offsetHeight;
-        let d =  document.querySelectorAll('.tr-th-second');
-        d.forEach(e=>e.style.top = h+'px ');
-      }
-      
-      window.onresize = resizer;
-      /*event.dataTransfer.dropEffect = "copy";
-     
-      jQuery.fn.bootstrapTable.defaults.formatNoMatches = () => {}; //удаляем ошибку при поиске  - баг? хз
-      jQuery.fn.bootstrapTable.defaults.search = false;
-      $('.my-table').bootstrapTable({   formatLoadingMessage: function() { return '';}    });
-      */
-    },
-    updated() {},
-    methods: {
-      v_handler(e){ 
-        alert('v=>'+e);
-      },
-      o_handler(e){
-        alert("o=>"+e);
-      },
+    }, 
+    methods: { 
+      header_click(e) {
+        this.ROWS_headers[e].show = !this.ROWS_headers[e].show;
+        this.overflow = 'inherit';
+        this.$nextTick( () => this.overflow = 'auto' );
+      }, 
       parseKey(key) {
         return typeof key == "object" ? Object.keys(key) : "";
       },
       parseRow(name) {
-        let o = this.searchResult;
+        let o;
+        if(name == 'Inport') o = this.getInportResult;
+        else o = this.getUsersResult;
         return o && typeof o == "object" && name in o ? o[name] : [];
-      }, 
-        
+      },         
       dragstart_handler(e){
         e.target.style.opacity = '0.4'; 
         e.dataTransfer.effectAllowed = 'all'; /*разрешенные события у драговера и энтера - значения е.dataTransfer.dropEffect */
         e.dataTransfer.setData('text',111);
         console.log(e.dataTransfer);
   //-> тащим иконку:
-        let dragIcon = document.createElement('img');
-        dragIcon.src = 'https://ru.seaicons.com/wp-content/uploads/2016/06/Files-Upload-File-icon.png';
-        dragIcon.width = 100;
-        e.dataTransfer.setDragImage(dragIcon, 0, 0);
+      let dragIcon = document.createElement("img");
+      dragIcon.src = "./img/arrow.png";
+      dragIcon.width = 100;
+      e.dataTransfer.setDragImage(dragIcon, 0, 0);
       },
 
-      dragend_handler(e,i){ //отпускаем в нужном месте, в "е" -- исходная(нужная) нода!
+      dragend_handler (e, i) { //отпускаем в нужном месте, в "е" -- исходная(нужная) нода!
         e.target.style.opacity = '1'; 
         //e.target.classList.remove('over');
         this.over = false;
         this.delete_over(); // убираем бордюр 
-        alert('перетащили -> '+i)
+        alert( 'перетащили -> ' + i );
       },
-      dragover_handler(e) {
-        this.delete_over(); // убираем бордюр
+      dragover_handler (e) {
+        this.delete_over (); // убираем бордюр
         let t = e.target;
-        if(t.classList.contains('tr')){
-          t.classList.add('over')
-          console.log(1);
+        if(t.classList.contains ('tr')) {
+          t.classList.add ('over')
+          console.log (1);
         }
         else if(t.parentElement.classList.contains('tr')) {
           t.parentElement.classList.add('over');
@@ -241,7 +202,7 @@ export default {
           t.parentElement.parentElement.classList.add('over');
           console.log(3);
         }
-        else if(t.parentElement.parentElement.parentElement.classList.contains('tr')){
+        else if(t.parentElement.parentElement.parentElement.classList.contains('tr')) {
           t.parentElement.parentElement.parentElement.classList.add('over');
           console.log(4);
         }
@@ -271,10 +232,29 @@ export default {
  
 
 <style lang="scss">
+.height0 {  
+  height: 0px;;
+  display: none;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0s linear 0.3s;
+}
+.tr-th-second-inport,
+.tr-th-second{
+  cursor: pointer;
+  transition: 1s; 
+  &:hover {
+    transform: zoom(1.2);
+    background: red;
+  }
+}
 .tr {
   display: flex;
   flex-direction: row;
   & > div {
+    width: 33.3333%;
+    flex-grow: 1;
+    padding: 5px;
+    word-break: break-all;
     flex:1;
     border: 1px solid;
   }

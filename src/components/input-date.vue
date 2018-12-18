@@ -2,9 +2,9 @@
 <template>  
   <span class="input-date">  
      <vue-pikaday  
-        :value="value!=null?new Date(value):null" 
+        :value="value" 
         @change="change_handler($event)"
-        :options="{format:'YYYY-MM-DD'}"
+        :options="{format:'DD.MM.YYYY'}"
         v-p-visible="visible"
       />
       <transition-group name="list-complete">
@@ -25,9 +25,7 @@
 <script>  
 export default {  
   props: {  
-       value: {
-         type: null,
-         default: () => ''
+       value: { 
        }
      }, 
   name: "input-date", 
@@ -35,7 +33,8 @@ export default {
   methods:{  
     change_handler(e){  
       let j = e.target.value;
-      if( j != null && !isNaN( new Date(j) ) ) {
+      console.log( '==========',j, e,new Date(j)  )
+      if( j && !isNaN( new Date(j) ) ) {
         this.$emit( 'input', j ); 
       } else {
         console.log('else emit to date -> NULL!!')

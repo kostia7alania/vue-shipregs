@@ -21,6 +21,11 @@ export default {
 };
 </script>
 <style>
+.input-time,
+.time-picker input.display-time {
+  width:100% !important;
+  min-width: 50px;
+}
 select,
 .input-date *,
 .time-picker *:not(.time-picker-overlay){

@@ -30,8 +30,7 @@
         </b-button>
       </template>
       <template slot="row-details" slot-scope="row">
-        <b-card>
-          SEX!
+        <b-card> 
           <ul>
             <li v-for="(value, key) in row.item" :key="key">{{ key }}: {{ value}}</li>
           </ul>
@@ -114,41 +113,5 @@ export default {
 
 <style scoped  >
 
-
-@media (max-width:723px){
-  .order1-845{order:1;}
-  .order0-845{order:0; margin-bottom: 10px;}
-}
-
-.row.justify-content-left.my-col.m-10.show-1500px-m.align-items-center { width: 100%; }
  
- .my-btns button {
-    padding: 7px 10px;
-    margin-right: 10px;
-    border-radius: 6px;
-    border: none;
-  }
-.my-btns { 
-  display: flex;
-  margin-right:0px;
-  min-width: 400px !important;  
-}
-.padding-left0{padding-left:0px;}
-
-@media (min-width: 1300px) {
-  .show-1500px-m {
-    display: none;
-  }
-  .show-1500px-p {
-    display: block;
-  }
-}
-@media (max-width: 1300px) {
-  .show-1500px-m {
-    display: block;
-  }
-  .show-1500px-p {
-    display: none;
-  }
-}
 </style>
