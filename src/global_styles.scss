@@ -1,16 +1,23 @@
-html {
-    font-family: Arial;
+html { 
     font-size: 14px;
     min-height: 100%;
-    overflow-x: hidden;
-}
+    overflow-x: hidden; 
 
-#app {
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
+    text-rendering: optimizelegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -moz-text-size-adjust: none;
+}
+ 
+
+  
+#app { 
+  margin: 0em auto;
+
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    height: 100vh;
-    margin: 0px;
+    height: 100vh; 
 
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -88,9 +95,9 @@ select {
 .sections-header {transition:1s;}
 .second-table {
     display: block;
-    max-height: 333px;
-    height: 333px;
-    min-height: 333px;
+    max-height: 100px;
+    /*height: 333px;*/
+    min-height: 233px;
     .sections-header {
         background-color: #007bff;
         &:hover{
@@ -102,6 +109,8 @@ select {
 }
 .second-table-minimized { 
     display: block; 
+    
+    min-height: 36px;
     .sections-header {
         background-color: orange;
         &:hover{
@@ -229,4 +238,12 @@ legend {
     &:hover {
         color: red;
     }
+}
+
+
+ .time-picker input.display-time,
+input {
+    height: 43.5px;
+    border-radius: 4px;
+    padding: 5px;
 }

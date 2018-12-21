@@ -18,8 +18,8 @@
   </div>
 </template>
 
-<script> 
-export default {
+<script>  
+export default { 
     name: "search-header", 
     props: ["data"],
     data() {

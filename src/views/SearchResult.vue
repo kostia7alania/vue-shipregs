@@ -14,8 +14,8 @@
                                                                'actions-colimn':i==FIELDS.length-1}">{{ff}}</div>
               </div> 
 
-            <res-head
-                      v-for="(itm_arr,itm_arr_i) in items"
+            <res-head 
+                      v-for="( itm_arr, itm_arr_i ) in items"
                       :key="itm_arr_i"
                       :itm_arr_i="itm_arr_i"
                       :itm_arr="itm_arr"
@@ -66,7 +66,7 @@
             -->
               <div class="table-content"> 
                 
-        <div @click="show_draft=!show_draft" class="tr tr-th tr-th-main sections-header" :class="{'tr-th-main-draft': 1}">
+        <div @mousedown="mousedown_handler" @mousemove="mousemove_handler" @mouseup="mouseup_handler" @click="show_draft=1" @dblclick="show_draft=!show_draft" class="tr tr-th tr-th-main sections-header" :class="{'tr-th-main-draft': 1}">
           <div> <b>ЧЕРНОВИКИ</b> &nbsp; <b-badge variant="primary">{{!show_draft?'↑':'↓'}} {{items_inport_count}}</b-badge> </div>
         </div>
             <res-head v-show="show_draft"
@@ -97,6 +97,7 @@ export default {
         show_draft: 0,
         overflow:'auto',
         over: false,
+        mousedown: 0,
 
         
         FIELDS: [
@@ -159,23 +160,57 @@ export default {
         let resizer = window.resizer = e => { 
           let h      = document.querySelector('.tr-th-main').offsetHeight;
           let d =  document.querySelectorAll('.tr-th-second');
-          d.forEach(e=>e.style.top = h+'px ');
+          d.forEach(e=>e.style.top = h+'px');
 
           let hDraft = document.querySelector('.tr-th-main-draft').offsetHeight;
-          let dDraft =  document.querySelectorAll('.tr-th-second-inport');
-          dDraft.forEach(e=>e.style.top = hDraft+'px ');
+          let dDraft = document.querySelectorAll('.tr-th-second-inport');
+          dDraft.forEach(e=>e.style.top = hDraft+'px');
 
         } 
         window.onresize = resizer;
       });
       if(!window.resizer_tm) window.resizer_tm = setTimeout(e=>resizer(),100); 
     },
-    methods: { 
+
+    methods: {
+
+      mousedown_handler (e) {
+        console.log('mousedown_handler=>', e);
+        window.m_pos = e.y;
+        window.BORDER_SIZE = 33;//ширина нашего перетаскиваемого бордюра;
+      //  if(e.offsetY < BORDER_SIZE) this.mousedown = true;
+      },
+      mousemove_handler (e) {
+        console.log('e.offsetY',e.offsetY)
+        if(e.offsetY > window.BORDER_SIZE) this.mousedown = false;
+        if(this.mousedown) {
+          console.log('mouseMOVE', e);
+          console.log('offsetHeight',e.target.offsetHeight);
+          console.log('offsetY',e.offsetY);
+          //e.target.offsetHeight = e.offsetY;
+          window.e = e; 
+          document.querySelector('.drag-from').style.minHeight = window.screen.height-e.clientY-90+'px'
+          if(!('m_pos' in window)) window.m_pos = '';
+          const dy = window.m_pos - e.y;
+          window.m_pos = e.y;
+          //var panel = document.querySelector('.drag-from')
+          //panel.style.height = (parseInt(getComputedStyle(panel, '').height)+dy) + "px"
+
+
+        }
+      },
+      mouseup_handler (e) {
+        this.mousedown = 0;
+        console.log('mouseUP', e);
+      },
+
+
       header_click(e) {
         //this.ROWS_headers[e].show = !this.ROWS_headers[e].show;
         this.overflow = 'inherit';
         this.$nextTick( () => this.overflow = 'auto' );
-      }, 
+      },
+
       parseKey(key) {
         let a =  typeof key == "object" ? Object.keys(key) : "";
         console.log('parse!!=>',key, a);

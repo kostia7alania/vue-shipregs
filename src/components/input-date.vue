@@ -11,7 +11,7 @@
       <img 
         :key="1"
         v-if="visible"
-        @click="val_comp=null"
+        @click="visible=!visible" 
         class="delete_img"
         src="../img/delete.png"
       >

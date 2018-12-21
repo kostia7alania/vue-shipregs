@@ -24,12 +24,20 @@
           <b-col md="6" class="my-1 ed_Port">
             <b-form-group horizontal label="Порт" class="mb-0">
               <b-input-group>
-                <b-form-select
+<!--                <b-form-select
                   @input="input_handler($event,'ed_Port')"
                   :value="ed_Port"
                   :options="ports"
                   class="mb-0"
                 ></b-form-select>
+            -->    
+            <mySelect  
+            
+                  @input="input_handler($event,'ed_Port')"
+                  :value="ed_Port"
+                  :options="ports"
+                  />
+
               </b-input-group>
             </b-form-group>
           </b-col>
@@ -86,8 +94,10 @@ import inputDate from "../components/input-date.vue";
 import inputTime from "../components/input-time.vue";
 import { ports } from "../assets/ports.js";
 
+import mySelect from "../components/my-select.vue"; 
+ 
 export default {
-  components: { "input-date": inputDate, "input-time": inputTime },
+  components: { "input-date": inputDate, "input-time": inputTime, mySelect },
   name: "search-panel",
   props:['counts_all'],
   data() {
@@ -127,6 +137,10 @@ export default {
 };
 </script>
 
- <style scoped lang="scss">
-
+ <style   lang="scss">
+.search-filters {
+  .form-row {
+    align-items: center;
+  }
+}
  </style>

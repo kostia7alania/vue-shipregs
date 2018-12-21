@@ -21,6 +21,7 @@
     "vue": "^2.5.17",
     "vue-good-table": "^2.16.0",
     "vue-izitoast": "^1.1.2",
+    "vue-select": "^2.5.1",
     "vue2-timepicker": "^0.1.4"
   },
   "devDependencies": {
