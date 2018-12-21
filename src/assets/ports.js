@@ -1,5 +1,5 @@
 export const ports = [
-{value:null,text:'все'},
+{value: null,text:'все'},
 {value:"RUAZO",text:"Азов"},
 {value:"RUSAK",text:"Александровск-Сахалинский"},
 {value:"RUAMD",text:"Амдерма"},

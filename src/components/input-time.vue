@@ -1,6 +1,6 @@
 
 <template>  
-     <VueTimepicker class="input-time" v-model="timeValue" @change="$emit('input',timeValue)" />  
+     <VueTimepicker hide-clear-button class="input-time" v-model="timeValue" @change="$emit('input',timeValue)" />  
 </template>
 
 <script>  
