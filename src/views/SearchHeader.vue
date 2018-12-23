@@ -1,14 +1,14 @@
 <template>
   <div id="search-header" v-if="data">
-    <h1>График</h1>
-    <h2>Расстановки и движения судов 
-      <transition name="component-fade">
-        <span v-if="data.ed_Port">в морском порту</span>
-      </transition>
-      <p v-if="data.ed_Port" class="css-typing" >{{getPORT}}</p> 
+    <h2>
+      <span>График расстановки и движения судов 
+        <transition name="component-fade">
+          <span v-if="data.ed_Port">в морском порту</span>
+        </transition>
+      </span>
+      <span v-if="data.ed_Port" class="css-typing" >{{getPORT}}</span> 
          
-      <p class="css-typing" v-if="!data.ed_Port">во всех морских портах</p>
-      
+      <span class="css-typing" v-if="!data.ed_Port">во всех морских портах</span>
     
     </h2>
     <h6 class="first-h6"> с <animateNumber :value="data.timeFrom.HH" :isTime="true"/>:<animateNumber :value="data.timeFrom.mm" :isTime="true"/> <!--{{data.ed_DateFrom}}--> &nbsp; <animateNumber :value="compDate(0)"  :isTime="true"/>.<animateNumber :value="compDate(1)"  :isTime="true"/>.<animateNumber :value="compDate(2)"/></h6>

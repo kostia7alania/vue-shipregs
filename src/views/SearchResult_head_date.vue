@@ -5,7 +5,6 @@
         <div style="text-align:left"><b>{{key_arr}} <b-badge variant="primary">{{show?'↑':'↓'}} {{date_arr.length}}</b-badge> </b>  </div>
       </div> 
       <res-head-date-row v-if="show" v-for="(row,row_i) in date_arr" :row="row" :key="row_i" :row_i="row_i" :inport="inport" @actions_handlers="$emit('actions_handlers',$event)"/>
-
     </div>
 </template>
 

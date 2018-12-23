@@ -21,7 +21,7 @@ export default {
   data () {
     return {
       getUsersResult: null,
-      url: 'https://portcall.marinet.ru/grafics/graf/db_grafics.php',
+      url: 'https://localhost:8080/grafics/graf/db_grafics.php',
       data: null
     }
   },

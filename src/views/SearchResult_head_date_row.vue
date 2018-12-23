@@ -1,5 +1,5 @@
 <template>
-      <div class="tr">
+      <div class="tr data-row">
         <div class="font-weight-bold first-colimn"><div>{{row_i+1}}</div></div>
         <div>{{row.rShipName}} ({{row.Length}})</div>
         <div>{{row.ShipTypeNameRus}}</div>
