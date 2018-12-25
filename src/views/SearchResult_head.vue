@@ -9,9 +9,8 @@
              
           </div>
       </div>
-      <res-head-date v-show="show" v-for="(date_arr, i) in itm_arr.arr" :key="i" :key_arr="i" :date_arr="date_arr" :class="{ height0: !show}" :inport="inport" @actions_handlers="$emit('actions_handlers',$event)"/>
+      <res-head-date v-show="show && date_arr.length > 0" v-for="(date_arr, i) in itm_arr.arr" :key="i" :key_arr="i" :date_arr="date_arr" :class="{ height0: !show}" :inport="inport" @actions_handlers="$emit('actions_handlers',$event)"/>
        <div v-if="itm_arr.arr.length==0" :class="{ height0: !show}" :inport="inport">Нет элементов для отображения!</div>
-
   </div>
 </template>
 
@@ -42,7 +41,7 @@ export default {
   methods: {
     show_handler(){
       this.show = !this.show;
-      this.$emit('header_click');
+      this.$emit('header_click'); 
     }
    }
 };

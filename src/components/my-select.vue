@@ -27,7 +27,7 @@ export default {
   name: "my-select",
   data() {
     return {
-      localVal: null,
+      localVal: 0,
       options2: [
         {
           id: 0,
@@ -46,7 +46,9 @@ export default {
       ]
     };
   },
-  mounted() {},
+  mounted() {
+    this.$nextTick(()=>this.localVal = null);
+  },
   computed: {},
   watch: {
     localVal(e){

@@ -18,9 +18,17 @@
         <div>{{row.Note}}</div>
         <div class="actions-colimn">
           <div>
-            <b-button v-if="!inport" @click="$emit('actions_handlers', {action: 'toDraft', data: row})">V</b-button>
-            <b-button v-if="!inport" @click="$emit('actions_handlers', {action: 'edit', data: row})">O</b-button>
-            <img v-if="inport" @click="$emit('actions_handlers', {action: 'toProd', data: row})" class="icons-width" src="../img/adding.png">
+            <b-button v-if="!inport" @click="actions_row_handler({action: 'toDraft', data: row})">
+              <span v-b-popover.hover="'Данное действие перенесет запись в черновики'" title="В черновики">
+              ↓
+              </span> 
+            </b-button>
+            <!--<b-button v-if="!inport" @click="$emit('actions_handlers', {action: 'edit', data: row})">O</b-button>-->
+              <b-button v-if="inport" @click="actions_row_handler({action: 'toProd', data: row})">
+              <span v-b-popover.hover="'Данное действие перенесет запись из черновика'" title="Из черновиков">
+               ↑ <!-- <img class="icons-width" src="../img/adding.png">-->
+              </span> 
+            </b-button> 
           </div>
         </div>
       </div> 
@@ -40,7 +48,13 @@ export default {
   mounted() {},
   updated() {},
   beforeDestroy() {},
-  methods: { }
+  methods: {
+    actions_row_handler({action, data}){
+      console.log('0---actions_row_handler=>',arguments,data.EntID )
+      this.$emit('actions_handlers', {action: action, data: data});
+      this.$nextTick(e=>this.$forceUpdate());
+    }
+   }
 };
 </script>
  

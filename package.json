@@ -15,6 +15,7 @@
     "bootstrap-table": "^1.12.2",
     "bootstrap-vue": "^2.0.0-rc.11",
     "jquery": "^3.3.1",
+    "js-file-download": "^0.4.4",
     "moment": "^2.23.0",
     "pikaday": "^1.8.0",
     "surge": "^0.20.1",

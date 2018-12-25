@@ -4,7 +4,13 @@
       <div @click="show_handler" class="tr tr-th2 date-header">
         <div style="text-align:left"><b>{{key_arr}} <b-badge variant="primary">{{show?'↑':'↓'}} {{date_arr.length}}</b-badge> </b>  </div>
       </div> 
-      <res-head-date-row v-if="show" v-for="(row,row_i) in date_arr" :row="row" :key="row_i" :row_i="row_i" :inport="inport" @actions_handlers="$emit('actions_handlers',$event)"/>
+      
+        <transition-group name="bounce" tag="div"> 
+        <template>
+            <res-head-date-row v-if="show" v-for="(row,row_i) in date_arr" :row="row" :key="row.EntID" :row_i="row_i" :inport="inport" @actions_handlers="actions_handlers"/>
+        </template>    
+        </transition-group> 
+  
     </div>
 </template>
 
@@ -33,6 +39,10 @@ export default {
   updated() {},
   beforeDestroy() {},
   methods: {
+    actions_handlers(e){
+      this.$emit('actions_handlers',e)
+      this.$nextTick(e=>this.$forceUpdate());
+    },
     show_handler() {
       this.show = !this.show;
       this.$emit("header_click");

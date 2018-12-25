@@ -114,7 +114,12 @@ select {
  
  
 .tr-th-main { z-index: 2;} 
- 
+
+.tr-th-main-draft,
+.tr-th-second-inport,
+.tr-th-second {
+    cursor:pointer;
+}
 .date-header {
     cursor: pointer;
     background-color: white;
@@ -154,7 +159,7 @@ select {
 
  
   
-.drag-from { cursor: pointer; }
+.drag-from { /*cursor: pointer;*/ }
 .over {  border: 2px dashed red !important; }
 
 

@@ -57,23 +57,29 @@
           <b-col md="12" class="graf_refresh">
             <b-input-group>
               <b-col>
-              <b-button @click="btn_clicked_handler('getUsers')" class="mb-2" size="sm"  :class="{disabled: btn_clicked, 'btn-success': !btn_clicked,'btn-gray-dark': btn_clicked} " horizontal >
-                <span v-if="btn_clicked" v-b-popover.hover="'Теперь мы автоматически обновляем данные'" title="Данные актуальны">
-                  <img src="../img/loading.gif" class="icons-width">
-                  Живые данные  &nbsp; 
-                  <b-badge variant="primary">
-                    <animateNumber :value="counts_all"/>
-                  </b-badge>
+
+              <b-button @click="btn_clicked_handler('getUsers')" class="mb-2" size="sm"  :class="{disabled: loading, 'btn-gray-dark': !btn_clicked,'btn-success': btn_clicked}" horizontal >
+                  <span v-if="btn_clicked && 0" v-b-popover.hover="'Теперь мы автоматически обновляем данные'" title="Данные актуальны">
+                    <img src="../img/loading.gif" class="icons-width">
+                    Живые данные  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
                   </span> 
-                <span v-else > 
-                  <img src="../img/loading_static.png" class="icons-width"> 
-                  Перестроить 
-                </span>                 
+                <template v-else >
+                  <span v-if="loading" v-b-popover.hover="'Подождите, мы обновляем данные...'" title="Загрузка">
+                    <img src="../img/loading.gif" class="icons-width">
+                    Загрузка  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
+                  </span>
+                  <span  v-else >
+                    <img src="../img/loading_static.png" class="icons-width"> 
+                    Перестроить  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
+                   </span>
+                </template>                 
               </b-button>
+ 
+
               </b-col>
               <b-col>
-              <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-3" @click="btn_clicked_handler('toExport')">
-                <span> 
+              <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-3" :class="{disabled: loading}" @click="btn_clicked_handler('toExport')">
+                <span v-b-popover.hover="'Данное действие экспортирует в Excel отчет по текущим выбранным параметрам формы'" title="Экспорт в Excel"> 
                   <img src="../img/excel.png" class="icons-width"> 
                   Экспорт 
                 </span>
@@ -99,7 +105,7 @@ import mySelect from "../components/my-select.vue";
 export default {
   components: { "input-date": inputDate, "input-time": inputTime, mySelect },
   name: "search-panel",
-  props:['counts_all'],
+  props:['counts_all', 'loading'],
   data() {
     return {
       ed_Port: null,
@@ -121,13 +127,14 @@ export default {
       this.get_data('getUsers');
     },
     btn_clicked_handler(e) {
+      if(this.loading) return;
       this.btn_clicked = true;
       this.get_data(e);
     },
     get_data(e) {
       if (!this.btn_clicked) return;
       if (this.interval_id) clearInterval(this.interval_id);
-      this.interval_id = setInterval(e => this.refresh_emit(), 5000);
+     // this.interval_id = setInterval(e => this.refresh_emit(), 5000);
       this.refresh_emit(e);
     },
     refresh_emit(e){
