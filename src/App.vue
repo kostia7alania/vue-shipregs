@@ -44,7 +44,7 @@ export default {
         console.log('actions_handlers',arguments)
       if      ( action == 'toProd' ) this.transferRows(data, 'toProd');
       else if ( action == 'toDraft') this.transferRows(data, 'toDraft');
-      else if ( action == 'edit'   ) this.edit   ();
+      else if ( action == 'edit'   ) this.edit   (); 
     },
     edit(){
       console.log('edit!');
@@ -52,29 +52,34 @@ export default {
 
     },
     graf_refresh ({data, action = 'getUsers'}) { //actions => 'getInport'(уже нету!); 'getUsers';
+      console.error('=>',arguments);
       this.loading = true;
       this.data = data;
       let test = (e) => e?e:'';
       let p  = test(data.ed_Port)
+      let ports  = test(data.ports)
       let hf = test(data.timeFrom.HH)
       let mf = test(data.timeFrom.mm)
       let ht = test(data.timeTo.HH)
       let mt = test(data.timeTo.mm)
       let df = test(data.ed_DateFrom) 
       let headers = {};
+
       if(action === 'toExport') headers = { responseType: 'blob' };
+      else if ( action == 'toSend' )  this.transferRows(data, 'toSend');
+
       let url = `${this.url}?action=${action}&port=${p}&HoursFrom=${hf}&MinsFrom=${mf}&HoursTo=${ht}&MinsTo=${mt}&ed_DateFrom=${df}`;
         console.log('ПРИНЯЛИ !graf_refresh')
         axios.get(url, headers)
         .then( res => {
           this.loading = false
           let data = res.data;
-          if( typeof data == 'string' && data.match('SQL') != null ) throw 'MS SQL ERROR!'
-            window.data = data;
-            if(action === 'toExport' ){
-                var fileDownload = require('js-file-download');
-                console.log('toExport',data)
-                fileDownload(data, 'filename.xlsx'); 
+          if( typeof data == 'string' && data.match('SQL') != null ) throw 'MS SQL ERROR!' 
+            if(action === 'toExport' ){console.log('toExport',data);
+                var fileDownload = require('js-file-download'); 
+                let prt = ports.filter( e => e.value == p );
+                prt =  prt.length>0 ? prt[0].text : '';   
+                fileDownload(data, `Export-${df} [${hf}-${mf} - ${ht}-${mt}]${p?'. '+prt:''}.xlsx`); 
               return;
             }
           try{data = JSON.parse(data.replace(/&quot;/gim,'"'))}catch(e){console.log('[catch] [err] ->',e);throw 'Невозможно спарсить данные, пришедшие с сервера!'}
@@ -91,7 +96,10 @@ export default {
       transferRows(obj, action) {
          let send_data = { ...this.data, ... obj }
         console.log('transferRows=>',arguments,'send_data=>',send_data)
-        let url = `${this.url}?action=${action}`;
+        if( action === 'toSend' ) {
+          send_data = {send_data, ...this.getUsersResult};//если суточная телега -подмешиваем существующими данными;
+        }
+        let url = `${this.url}?action=${action}`; 
         axios .post(url,send_data) 
               .then( e => this.graf_refresh({data: send_data, action: 'getUsers'}) )
               .catch(err=>{

@@ -58,7 +58,7 @@
             <b-input-group>
               <b-col>
 
-              <b-button @click="btn_clicked_handler('getUsers')" class="mb-2" size="sm"  :class="{disabled: loading, 'btn-gray-dark': !btn_clicked,'btn-success': btn_clicked}" horizontal >
+              <b-button @click="btn_clicked_handler({action:'getUsers'})" class="mb-1" size="sm"  :class="{disabled: loading, 'btn-gray-dark': !btn_clicked,'btn-success': btn_clicked}" horizontal >
                   <span v-if="btn_clicked && 0" v-b-popover.hover="'Теперь мы автоматически обновляем данные'" title="Данные актуальны">
                     <img src="../img/loading.gif" class="icons-width">
                     Живые данные  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
@@ -77,14 +77,26 @@
  
 
               </b-col>
+
               <b-col>
-              <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-3" :class="{disabled: loading}" @click="btn_clicked_handler('toExport')">
+              <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-1" :class="{disabled: loading}" @click="btn_clicked_handler({action:'toExport'})">
                 <span v-b-popover.hover="'Данное действие экспортирует в Excel отчет по текущим выбранным параметрам формы'" title="Экспорт в Excel"> 
                   <img src="../img/excel.png" class="icons-width"> 
                   Экспорт 
                 </span>
               </b-button>
               </b-col>
+
+               
+              <b-col>
+              <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-1" :class="{disabled: loading}" @click="btn_clicked_handler({action:'toSend'})">
+                <span v-b-popover.hover="'Данное действие отправит суточный график на сервер'" title="Суточный график"> 
+                  <img src="../img/telegram.png" class="icons-width"> 
+                  Суточный график 
+                </span>
+              </b-button>
+              </b-col>
+
             </b-input-group>
           </b-col>
         </b-row>
@@ -124,21 +136,22 @@ export default {
     input_handler(data, prop) {
       console.log(arguments);
       this[prop] = data;
-      this.get_data('getUsers');
+      this.get_data( {action:'getUsers'} );
     },
-    btn_clicked_handler(e) {
+    btn_clicked_handler(obj) {
       if(this.loading) return;
       this.btn_clicked = true;
-      this.get_data(e);
+      this.get_data(obj);
     },
-    get_data(e) {
+    get_data(obj) {
       if (!this.btn_clicked) return;
       if (this.interval_id) clearInterval(this.interval_id);
      // this.interval_id = setInterval(e => this.refresh_emit(), 5000);
-      this.refresh_emit(e);
+      this.refresh_emit(obj);
     },
-    refresh_emit(e){
-      this.$emit("graf_refresh", { data: this.$data, action: e } );
+    refresh_emit(obj){
+      console.error('dddd',this.$data);
+      this.$emit("graf_refresh", { data: this.$data, ...obj} );
     }
   }
 };
