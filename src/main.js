@@ -21,8 +21,6 @@ Vue.use(VueIziToast); // Vue.use(VueIziToast, defaultOptionsObject);
 
 import animateNumber from "./components/animate-number.vue"; Vue.component("animateNumber",animateNumber);
 
-import vSelect from 'vue-select'; Vue.component('v-select', vSelect)
-
 window.axios = require('axios');
 window.Vue = new Vue({
   render: h => h(App)  

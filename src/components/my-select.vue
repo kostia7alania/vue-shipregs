@@ -22,7 +22,10 @@
 </template>
 
 <script>
+
+import vSelect from 'vue-select';
 export default {
+  components:{'v-select':vSelect},
   props: ["options","value"], // text,value
   name: "my-select",
   data() {
