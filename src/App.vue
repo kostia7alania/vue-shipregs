@@ -17,12 +17,12 @@ import {mixins} from './mixins.js';
 export default {
   mixins:[mixins],
   name: 'app',
+  props: ['url'],
   components: { SearchPanel, SearchResult, SearchHeader },
   data () {
     return {
       loading: false,
-      getUsersResult: null,
-      url: 'https://portcall.marinet.ru/grafics/graf/db_grafics.php',
+      getUsersResult: null, 
       data: null
     }
   },
@@ -52,7 +52,7 @@ export default {
 
     },
     graf_refresh ({data, action = 'getUsers'}) { //actions => 'getInport'(уже нету!); 'getUsers';
-      console.error('=>',arguments);
+      console.warn('=>',arguments);
       this.loading = true;
       this.data = data;
       let test = (e) => e?e:'';

@@ -22,6 +22,10 @@ Vue.use(VueIziToast); // Vue.use(VueIziToast, defaultOptionsObject);
 import animateNumber from "./components/animate-number.vue"; Vue.component("animateNumber",animateNumber);
 
 window.axios = require('axios');
-window.Vue = new Vue({
-  render: h => h(App)  
-}).$mount('#app')
+
+window.init_grafics = grafics_url => {
+  window.Vue = new Vue({
+    render: h => h( App, { props: { url: grafics_url } } ) 
+  }).$mount('#app');
+}
+//init_grafics ('url-api');

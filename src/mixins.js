@@ -1,4 +1,5 @@
- export const mixins = {
+
+export const mixins = {
    data() {
      return {
        notificationSystem: {

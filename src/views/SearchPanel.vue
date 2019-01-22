@@ -150,7 +150,7 @@ export default {
       this.refresh_emit(obj);
     },
     refresh_emit(obj){
-      console.error('dddd',this.$data);
+      console.warn('dddd',this.$data);
       this.$emit("graf_refresh", { data: this.$data, ...obj} );
     }
   }
