@@ -60,16 +60,16 @@
 
               <b-button @click="btn_clicked_handler({action:'getUsers'})" class="mb-1" size="sm"  :class="{disabled: loading, 'btn-gray-dark': !btn_clicked,'btn-success': btn_clicked}" horizontal >
                   <span v-if="btn_clicked && 0" v-b-popover.hover="'Теперь мы автоматически обновляем данные'" title="Данные актуальны">
-                    <img src="../img/loading.gif" class="icons-width">
+                    <img :src="loading_img" class="icons-width">
                     Живые данные  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
-                  </span> 
+                  </span>
                 <template v-else >
                   <span v-if="loading" v-b-popover.hover="'Подождите, мы обновляем данные...'" title="Загрузка">
-                    <img src="../img/loading.gif" class="icons-width">
+                    <img :src="loading_img" class="icons-width">
                     Загрузка  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
                   </span>
                   <span  v-else >
-                    <img src="../img/loading_static.png" class="icons-width"> 
+                    <img :src="loading_static_img" class="icons-width"> 
                     Перестроить  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
                    </span>
                 </template>                 
@@ -81,7 +81,7 @@
               <b-col>
               <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-1" :class="{disabled: loading}" @click="btn_clicked_handler({action:'toExport'})">
                 <span v-b-popover.hover="'Данное действие экспортирует в Excel отчет по текущим выбранным параметрам формы'" title="Экспорт в Excel"> 
-                  <img src="../img/excel.png" class="icons-width"> 
+                  <img :src="excel_img" class="icons-width"> 
                   Экспорт 
                 </span>
               </b-button>
@@ -91,7 +91,7 @@
               <b-col>
               <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-1" :class="{disabled: loading}" @click="btn_clicked_handler({action:'toSend'})">
                 <span v-b-popover.hover="'Данное действие отправит суточный график на сервер'" title="Суточный график"> 
-                  <img src="../img/telegram.png" class="icons-width"> 
+                  <img :src="telegram_img" class="icons-width"> 
                   Суточный график 
                 </span>
               </b-button>
@@ -120,6 +120,10 @@ export default {
   props:['counts_all', 'loading'],
   data() {
     return {
+      loading_img: require('@/img/loading.gif'),
+      loading_static_img: require('@/img/loading_static.png'),
+      excel_img: require('@/img/excel.png'),
+      telegram_img: require('@/img/telegram.png'),
       ed_Port: null,
       ed_DateFrom: null,
       timeFrom: { HH: "15", mm: "00" },

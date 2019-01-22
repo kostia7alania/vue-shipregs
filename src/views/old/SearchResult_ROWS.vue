@@ -35,7 +35,7 @@
         <div>
           <b-button v-if="!inport" @click="v_handler(e)">V</b-button>
           <b-button v-if="!inport" @click="o_handler(e)">O</b-button>
-          <img  v-if=" inport" @click="$emit('inportAdd_handler', e)" class="icons-width" src="../img/adding.png">
+          <img v-if=" inport" @click="$emit('inportAdd_handler', e)" class="icons-width" :src="adding_img">
         </div>
       </div>
     </div>
@@ -48,6 +48,7 @@ export default {
   props: ["itm_arr", "ROWS_headers", "itm_arr_i", "index", "k", "inport"],
   data() {
     return {
+      adding_img: require('../img/adding.png'),
       overflow: "auto",
       show: false
     };

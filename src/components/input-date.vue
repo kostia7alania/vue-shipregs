@@ -13,9 +13,9 @@
         v-if="visible"
         @click="visible=!visible" 
         class="delete_img"
-        src="../img/delete.png"
+        :src="del_img"
       >
-      <img :key="2" v-else @click="visible=!visible" src="../img/calendar.png">
+      <img :key="2" v-else @click="visible=!visible" :src="calendar_img">
     </transition-group>
 
     <!-- <date-picker width="100%"
@@ -39,6 +39,8 @@ export default {
   name: "input-date",
   data() {
     return { 
+      del_img: require('@/img/delete.png'),
+      calendar_img: require('@/img/calendar.png'),
       visible: false,
       val: null,
       options: {
