@@ -22,14 +22,16 @@
 <script>  
 export default { 
     name: "search-header", 
-    props: ["data"],
+    props: ["data", 'ports'],
     data() {
       return {} 
     },
     computed: {
-      getPORT(){
+      getPORT() {
         let p = this.data.ed_Port;
-        let res = this.data.ports.filter(e=>e.value==p);
+        let ps = this.ports;
+        if(!ps) return '' //'Порты не приехали!';
+        let res = ps.filter(e=>e.value==p);
         return res.length>0?res[0].text:false;
       },
       getTODAY(){

@@ -1,7 +1,7 @@
 <template>
   <div id="app"> 
-    <SearchHeader :data="data"/>
-    <SearchPanel :loading="loading" @graf_refresh="graf_refresh" @emit_data="data=$event" :counts_all="counts_all" />
+    <SearchHeader :data="data" :ports="ports"/>
+    <SearchPanel :ports="ports" :loading="loading" @graf_refresh="graf_refresh" @emit_data="data=$event" :counts_all="counts_all" />
     <SearchResult :getUsersResult="getUsersResult" @actions_handlers="actions_handlers"/>
    </div>
 </template>
@@ -23,7 +23,8 @@ export default {
     return {
       loading: false,
       getUsersResult: null, 
-      data: null
+      data: null,
+      ports: null
     }
   },
   computed: {
@@ -38,6 +39,30 @@ export default {
     });
     return a;
     }
+  },
+  mounted(){
+    this.loading = true;
+    //import { ports } from "./assets/ports.js";
+    let port = '';
+      let url = `${this.url}?action=getPorts&port=${port}`;
+      axios
+      .get(url)
+      .then(e=>{
+        let d = e.data;  
+        if(!(d instanceof Array) && d instanceof Object){ 
+          //d = Object.keys(d).map( key => [ +key, d[key] ] );//преобразование в аррау
+          d =  Object.keys(d).map( key => d[key] );
+        }
+        if(d instanceof Array && d.length>0){ ///[ {value: null,text:'все'}, {value:"RUAZO",text:"Азов"},..]
+          this.ports = d;
+        } else throw 'Пришли кривые данные!';
+        this.loading = false;
+     })
+     .catch( err => {
+          this.loading = false;
+          console.warn('ОШИБКА в аксиосе => ', err);
+          this.$toast.warning('Произошла ошибка при получении списка портов', 'Сетевая ошибка', this.notificationSystem.options.warning);
+        })
   },
   methods: {
     actions_handlers({action,data}) {

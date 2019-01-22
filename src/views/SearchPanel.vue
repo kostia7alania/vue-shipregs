@@ -32,9 +32,10 @@
                 ></b-form-select>
             -->    
             <mySelect  
-            
+                  v-if="ports"
                   @input="input_handler($event,'ed_Port')"
                   :value="ed_Port"
+                  :ports="ports"
                   :options="ports"
                   />
 
@@ -87,7 +88,7 @@
               </b-button>
               </b-col>
 
-               
+               <!--
               <b-col>
               <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-1" :class="{disabled: loading}" @click="btn_clicked_handler({action:'toSend'})">
                 <span v-b-popover.hover="'Данное действие отправит суточный график на сервер'" title="Суточный график"> 
@@ -96,6 +97,7 @@
                 </span>
               </b-button>
               </b-col>
+              -->
 
             </b-input-group>
           </b-col>
@@ -110,28 +112,36 @@
 <script>
 import inputDate from "../components/input-date.vue";
 import inputTime from "../components/input-time.vue";
-import { ports } from "../assets/ports.js";
 
 import mySelect from "../components/my-select.vue"; 
  
 export default {
   components: { "input-date": inputDate, "input-time": inputTime, mySelect },
   name: "search-panel",
-  props:['counts_all', 'loading'],
+  props:['counts_all', 'loading', 'ports'],
   data() {
     return {
       loading_img: require('@/img/loading.gif'),
       loading_static_img: require('@/img/loading_static.png'),
       excel_img: require('@/img/excel.png'),
       telegram_img: require('@/img/telegram.png'),
-      ed_Port: null,
+      ed_Port: 'RUAZO',
       ed_DateFrom: null,
       timeFrom: { HH: "15", mm: "00" },
-      timeTo: { HH: "15", mm: "00" },
-      ports: ports,
+      timeTo: { HH: "15", mm: "00" }, 
       interval_id: null,
       btn_clicked: false
     };
+  },
+  watch:{
+    ports(){
+      let ps = this.ports;
+      if(ps instanceof Array) { 
+        this.input_handler(ps[0].value,'ed_Port')//первый элемент из списка ПОРТОВ всегда автоматом селектитьСЯ будет
+     //   alert(ps[1].value)
+        this.$forceUpdate();        
+      }
+    }
   },
   mounted(){
     this.$emit('emit_data',this.$data);
@@ -154,8 +164,8 @@ export default {
       this.refresh_emit(obj);
     },
     refresh_emit(obj){
-      console.warn('dddd',this.$data);
-      this.$emit("graf_refresh", { data: this.$data, ...obj} );
+      console.warn('dddd', { ...this.$data, ...{ports: this.ports} });
+      this.$emit("graf_refresh", { data: this.$data, ...obj, ...{ports: this.ports} } );
     }
   }
 };

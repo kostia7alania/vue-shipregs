@@ -26,7 +26,7 @@
 import vSelect from 'vue-select';
 export default {
   components:{'v-select':vSelect},
-  props: ["options","value"], // text,value
+  props: ["options","value", 'ports'], // text,value
   name: "my-select",
   data() {
     return {
@@ -50,23 +50,26 @@ export default {
     };
   },
   mounted() {
-    this.$nextTick(()=>this.localVal = null);
+    this.$nextTick( ()=>{
+      //this.localVal = this.value;
+      this.localVal = this.ports.filter( e => e.value == this.value )[0]
+    });
   },
   computed: {},
   watch: {
     localVal(e){
-      console.log('localVal=>',arguments)
-      this.$emit("input", e?e.value:e)
+      console.log('localVal=>',arguments)  
+      this.$emit("input", e instanceof Object ? e.value:e)
     }
   },
   methods: {
     selectHandler(e) {
       console.log(this.localVal)
       /*
-      console.log('value ДО',this.value,'val=',e?e.value:e)
-
-      this.$emit("input", e?e.value:e);
-      console.log('value ПОСЛЕ',this.value)*/
+        console.log('value ДО',this.value,'val=',e?e.value:e)
+        this.$emit("input", e?e.value:e);
+        console.log('value ПОСЛЕ',this.value)
+      */
     }
   }
 };
