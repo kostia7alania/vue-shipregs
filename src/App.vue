@@ -66,11 +66,14 @@ export default {
       let headers = {};
 
       if(action === 'toExport') headers = { responseType: 'blob' };
-      else if ( action == 'toSend' )  this.transferRows(data, 'toSend');
+      
+      if ( action == 'toSend' )  this.transferRows(data, 'toSend');
+      else {
 
       let url = `${this.url}?action=${action}&port=${p}&HoursFrom=${hf}&MinsFrom=${mf}&HoursTo=${ht}&MinsTo=${mt}&ed_DateFrom=${df}`;
         console.log('ПРИНЯЛИ !graf_refresh')
-        axios.get(url, headers)
+        axios
+        .get(url, headers)
         .then( res => {
           this.loading = false
           let data = res.data;
@@ -91,6 +94,7 @@ export default {
           console.warn('ОШИБКА в аксиосе => ', err);
           this.$toast.warning('Произошла ошибка при получении данных', 'Сетевая ошибка', this.notificationSystem.options.warning);
         })
+      }
       },
 
       transferRows(obj, action) {
@@ -103,6 +107,7 @@ export default {
         axios .post(url,send_data) 
               .then( e => this.graf_refresh({data: send_data, action: 'getUsers'}) )
               .catch(err=>{
+                 this.loading = false;
                 console.log('Ошибка при ПОСТе => ',err);
                 this.$toast.warning('Произошла ошибка при отправке данных', 'Сетевая ошибка', this.notificationSystem.options.warning);
               });

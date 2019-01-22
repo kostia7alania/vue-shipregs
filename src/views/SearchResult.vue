@@ -79,7 +79,7 @@
           >
             <div>
               <b>ЧЕРНОВИКИ</b> &nbsp;
-              <b-badge variant="primary">{{!show_draft=='min'?'↑':'↓'}} {{items_inport_count}}</b-badge>
+              <b-badge variant="primary">{{show_draft == 'min'?'↑':'↓'}} {{items_inport_count}} </b-badge>
             </div>
           </div> 
           
