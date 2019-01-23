@@ -28,5 +28,7 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-###Указать в public/index.html свой url 
+### Указать в public/index.html свой url 
+```
 init_grafics ('https://localhost/api.php');
+```
