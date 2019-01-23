@@ -58,14 +58,14 @@ export default {
   computed: {},
   watch: {
     localVal(e){
-      console.log('localVal=>',arguments)  
+ //     console.log('localVal=>',arguments)  
       this.$emit("input", e instanceof Object ? e.value:e)
     }
   },
   methods: {
     selectHandler(e) {
-      console.log(this.localVal)
-      /*
+     /*  console.log(this.localVal)
+     
         console.log('value ДО',this.value,'val=',e?e.value:e)
         this.$emit("input", e?e.value:e);
         console.log('value ПОСЛЕ',this.value)

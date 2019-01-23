@@ -50,7 +50,7 @@ export default {
   beforeDestroy() {},
   methods: {
     actions_row_handler({action, data}){
-      console.log('0---actions_row_handler=>',arguments,data.EntID )
+   //   console.log('0---actions_row_handler=>',arguments,data.EntID )
       this.$emit('actions_handlers', {action: action, data: data});
       this.$nextTick(e=>this.$forceUpdate());
     }

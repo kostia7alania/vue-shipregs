@@ -178,7 +178,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      console.log("MOUNTED head date!");
+   //   console.log("MOUNTED head date!");
       let resizer = (window.resizer = e => {
         let h = document.querySelector(".tr-th-main").offsetHeight;
         let d = document.querySelectorAll(".tr-th-second");
@@ -198,7 +198,7 @@ export default {
       this.show_draft = this.show_draft == 'min' ? 'std': 'min';
     },
     mousedown_handler(e) {
-      console.log("mousedown_handler=>", e);
+     // console.log("mousedown_handler=>", e);
       window.m_pos = e.y;
       window.BORDER_SIZE = 33; //ширина нашего перетаскиваемого бордюра;
         if(e.offsetY < BORDER_SIZE){
@@ -209,12 +209,12 @@ export default {
 
 
     mousemove_handler(e) {
-      console.log("e.offsetY", e.offsetY);
+   //   console.log("e.offsetY", e.offsetY);
       if (e.offsetY > window.BORDER_SIZE) this.mousedown = false;
       if (this.mousedown) {
-        console.log("mouseMOVE", e);
-        console.log("offsetHeight", e.target.offsetHeight);
-        console.log("offsetY", e.offsetY);
+    //    console.log("mouseMOVE", e);
+    //    console.log("offsetHeight", e.target.offsetHeight);
+    //    console.log("offsetY", e.offsetY);
         //e.target.offsetHeight = e.offsetY;
         window.e = e;
         document.querySelector(".drag-from").style.minHeight =
@@ -228,7 +228,7 @@ export default {
     },
     mouseup_handler(e) {
       this.mousedown = 0;
-      console.log("mouseUP", e);
+     // console.log("mouseUP", e);
     },
 
     header_click(e) {
@@ -241,7 +241,7 @@ export default {
 
     parseKey(key) {
       let a = typeof key == "object" ? Object.keys(key) : "";
-      console.log("parse!!=>", key, a);
+   //   console.log("parse!!=>", key, a);
       return a;
     },
     parseRow(name) {
@@ -253,7 +253,7 @@ export default {
       e.dataTransfer.effectAllowed =
         "all"; /*разрешенные события у драговера и энтера - значения е.dataTransfer.dropEffect */
       e.dataTransfer.setData("text", 111);
-      console.log(e.dataTransfer);
+  //    console.log(e.dataTransfer);
       //-> тащим иконку:
       let dragIcon = document.createElement("img");
       dragIcon.src = "./img/arrow.png";

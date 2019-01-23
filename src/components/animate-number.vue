@@ -33,7 +33,7 @@ export default {
       if(value === null || isNaN(parseInt(value))) out = value;
       else if(t && value >= 0 && value < 10 ) out = `0${value.toFixed(0)}`;
       else out = `${value.toFixed(0)}`;
-      console.log('value=>',value, 'out=>',out);
+      //console.log('value=>',value, 'out=>',out);
       return out;
     }
   }

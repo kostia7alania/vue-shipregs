@@ -189,14 +189,14 @@ import { Drag, Drop } from 'vue-drag-drop';
     updated() {},
     methods: {	
       dragstart_handler(e){
-        alert(1111)
+    ///    alert(1111)
       },
       drag_handler(e){
-        console.log('sex=>',e)
+       // console.log('sex=>',e)
        
       },
       handleDrop(data) {
-				alert(`You dropped with data: ${JSON.stringify(data)}`);
+				//alert(`You dropped with data: ${JSON.stringify(data)}`);
 			},
       parseKey(key) {
         return typeof key == "object" ? Object.keys(key) : "";
@@ -207,10 +207,10 @@ import { Drag, Drop } from 'vue-drag-drop';
       },
       row_clicked(e) {
         this.activeEntID = e.EntID;
-        console.log("row_clicked=>", e);
+        //console.log("row_clicked=>", e);
       },
       row_dblclicked(e) {
-        console.log("row dblclicked e,this", e, this);
+        //console.log("row dblclicked e,this", e, this);
       },
       onFiltered(filteredItems) {
         // Trigger pagination to update the number of buttons/pages due to filtering

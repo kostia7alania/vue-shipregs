@@ -66,18 +66,18 @@ export default {
   },
   methods: {
     actions_handlers({action,data}) {
-        console.log('actions_handlers',arguments)
+    //    console.log('actions_handlers',arguments)
       if      ( action == 'toProd' ) this.transferRows(data, 'toProd');
       else if ( action == 'toDraft') this.transferRows(data, 'toDraft');
       else if ( action == 'edit'   ) this.edit   (); 
     },
     edit(){
-      console.log('edit!');
+     // console.log('edit!');
       this.$toast.warning('Правим!)', 'Редактируем', this.notificationSystem.options.warning);
 
     },
     graf_refresh ({data, action = 'getUsers'}) { //actions => 'getInport'(уже нету!); 'getUsers';
-      console.warn('=>',arguments);
+    //  console.warn('=>',arguments);
       this.loading = true;
       this.data = data;
       let test = (e) => e?e:'';
@@ -96,21 +96,22 @@ export default {
       else {
 
       let url = `${this.url}?action=${action}&port=${p}&HoursFrom=${hf}&MinsFrom=${mf}&HoursTo=${ht}&MinsTo=${mt}&ed_DateFrom=${df}`;
-        console.log('ПРИНЯЛИ !graf_refresh')
+      //  console.log('ПРИНЯЛИ !graf_refresh')
         axios
         .get(url, headers)
         .then( res => {
           this.loading = false
           let data = res.data;
           if( typeof data == 'string' && data.match('SQL') != null ) throw 'MS SQL ERROR!' 
-            if(action === 'toExport' ){console.log('toExport',data);
+            if(action === 'toExport' ){
+              //console.log('toExport',data);
                 var fileDownload = require('js-file-download'); 
                 let prt = ports.filter( e => e.value == p );
                 prt =  prt.length>0 ? prt[0].text : '';   
                 fileDownload(data, `Export-${df} [${hf}-${mf} - ${ht}-${mt}]${p?'. '+prt:''}.xlsx`); 
               return;
             }
-          try{data = JSON.parse(data.replace(/&quot;/gim,'"'))}catch(e){console.log('[catch] [err] ->',e);throw 'Невозможно спарсить данные, пришедшие с сервера!'}
+          try{data = JSON.parse(data.replace(/&quot;/gim,'"'))}catch(e){console.warn('[catch] [err] ->',e);throw 'Невозможно спарсить данные, пришедшие с сервера!'}
           if( typeof data != 'object' ) throw 'данные не пришли';
 
             this.getUsersResult = data;
@@ -124,7 +125,7 @@ export default {
 
       transferRows(obj, action) {
          let send_data = { ...this.data, ... obj }
-        console.log('transferRows=>',arguments,'send_data=>',send_data)
+       // console.log('transferRows=>',arguments,'send_data=>',send_data)
         if( action === 'toSend' ) {
           send_data = {send_data, ...this.getUsersResult};//если суточная телега -подмешиваем существующими данными;
         }
@@ -133,7 +134,7 @@ export default {
               .then( e => this.graf_refresh({data: send_data, action: 'getUsers'}) )
               .catch(err=>{
                  this.loading = false;
-                console.log('Ошибка при ПОСТе => ',err);
+                console.warn('Ошибка при ПОСТе => ',err);
                 this.$toast.warning('Произошла ошибка при отправке данных', 'Сетевая ошибка', this.notificationSystem.options.warning);
               });
       }

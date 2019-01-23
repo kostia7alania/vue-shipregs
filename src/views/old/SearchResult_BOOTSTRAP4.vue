@@ -85,7 +85,7 @@ export default {
   methods: {  
     row_clicked(e){ this.activeEntID = e.EntID; console.log('row_clicked=>',e);   },
     row_dblclicked(e){
-      console.log('row dblclicked e,this',e,this);
+    //  console.log('row dblclicked e,this',e,this);
     },
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering

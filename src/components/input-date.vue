@@ -81,11 +81,11 @@ export default {
     };
   },
   mounted() {
-    console.log('ДО',this.value)
+ //   console.log('ДО',this.value)
     this.val_comp = new Date();
     this.$emit('input',this.val_comp)
     this.$nextTick( () => {
-      console.log('ПОСЛЕ',this.value)
+ //     console.log('ПОСЛЕ',this.value)
     }) ;
   },
   computed: {
@@ -94,7 +94,7 @@ export default {
         return this.val 
       },
       set(e) { 
-        console.log('set',e)
+  //      console.log('set',e)
         this.val = e;
         if(!e) this.$emit("input", e); 
         else this.$emit('input', `${e.getDate()}.${(e.getMonth())+1}.${e.getFullYear()}`)

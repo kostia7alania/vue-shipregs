@@ -148,7 +148,7 @@ export default {
   },
   methods: {
     input_handler(data, prop) {
-      console.log(arguments);
+    ///  console.log(arguments);
       this[prop] = data;
       this.get_data( {action:'getUsers'} );
     },
@@ -164,7 +164,7 @@ export default {
       this.refresh_emit(obj);
     },
     refresh_emit(obj){
-      console.warn('dddd', { ...this.$data, ...{ports: this.ports} });
+    //  console.warn('dddd', { ...this.$data, ...{ports: this.ports} });
       this.$emit("graf_refresh", { data: this.$data, ...obj, ...{ports: this.ports} } );
     }
   }
