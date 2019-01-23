@@ -82,7 +82,7 @@ export default {
       this.data = data;
       let test = (e) => e?e:'';
       let p  = test(data.ed_Port)
-      let ports  = test(data.ports)
+      let ports  = test(this.ports)
       let hf = test(data.timeFrom.HH)
       let mf = test(data.timeFrom.mm)
       let ht = test(data.timeTo.HH)
