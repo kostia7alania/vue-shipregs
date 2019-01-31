@@ -1,11 +1,14 @@
-<template>
-  <animated-number
+<template v-if="value"> 
+ 
+  <animated-number 
     :value="value"
     :formatValue="formatToPrice"
     :duration="300"
     :translateX="[100, 200]"
     :round="1"
-  />
+  />  
+
+  
 </template>
 <script>
 import AnimatedNumber from "animated-number-vue";
@@ -14,13 +17,10 @@ export default {
   components: {AnimatedNumber},
   props: {
     isTime:{
-      type: [Number,String,Boolean],
+      type: null,//[Number,String,Boolean],
       default: () => false
     },
-    value: {
-      type: [Number, String],
-      default: () => 0
-    }
+    value: null,
   },
   data() {
     return { };
