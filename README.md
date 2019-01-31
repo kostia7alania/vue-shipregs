@@ -1,7 +1,7 @@
 # vue-shipregs
 
 
-<img src="https://vk.com/doc40778210_485209272"/>
+<img src="https://github.com/kostia7alania/vue-shipregs/raw/master/shipregs.gif"/>
 
 ## Project setup
 ```
