@@ -1,7 +1,10 @@
 <template>
       <div class="tr data-row">
-        <div class="font-weight-bold first-colimn"><div>{{row_i+1}}</div></div>
-        <div>{{row.rShipName}} ({{row.Length}})</div>
+        <div class="font-weight-bold first-colimn"> {{row_i+1}} </div>
+        <div>
+          <a href="#" @click="goShipById_handler(row)"> {{row.rShipName}} ({{row.Length}}) </a>
+        </div>
+        <div>{{row.IMO}}</div>
         <div>{{row.ShipTypeNameRus}}</div>
         <div>{{row.CountryNameRus}}</div>
         <div>{{row.DepositStern}}</div>
@@ -49,10 +52,15 @@ export default {
   updated() {},
   beforeDestroy() {},
   methods: {
+    goShipById_handler(e){
+      //console.log('shipID->',e.ShipID);
+      window.top.goShipByID(e.ShipID,2);
+      //http://window.top.goShipById('shipId',2)
+    },
     actions_row_handler({action, data}){
    //   console.log('0---actions_row_handler=>',arguments,data.EntID )
       this.$emit('actions_handlers', {action: action, data: data});
-      this.$nextTick(e=>this.$forceUpdate());
+      this.$nextTick ( () => this.$forceUpdate() );
     }
    }
 };
