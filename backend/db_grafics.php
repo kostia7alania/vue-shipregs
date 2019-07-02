@@ -11,11 +11,11 @@ try {
 	switch ( $_GET['action'] ) {
 		case 'toExport': $exc = 1;
 		case 'getUsers':
-			$response = getEnterMore(); 
-			$response = json_decode($response, true);  
-			
-			
-			//echo(htmlspecialchars(json_encode($response), ENT_QUOTES, 'UTF-8'));  die; 
+			$response = getEnterMore();
+			$response = json_decode($response, true);
+
+
+			//echo(htmlspecialchars(json_encode($response), ENT_QUOTES, 'UTF-8'));  die;
 
 
 			$response = [
@@ -31,52 +31,52 @@ try {
 				'_fourth'=>parseArray($response['fourth'],1),
 				'_fifth'=>parseArray($response['fifth'],1),
 				'_sixth'=>parseArray($response['sixth'],1),
-			
+
 			];
 			if($exc) require('toExcel.php');//тут die;
 
-			echo(htmlspecialchars(json_encode($response), ENT_QUOTES, 'UTF-8'));  die; 
+			echo(htmlspecialchars(json_encode($response), ENT_QUOTES, 'UTF-8'));  die;
 		break;
 /*		case 'getInport':
-			$response = getInportMore(); 
-			$response = json_decode($response, true);  
+			$response = getInportMore();
+			$response = json_decode($response, true);
 			$response = [
 				'Inport'=>parseArray($response['Inport'])
 			];
 			echo(htmlspecialchars(json_encode($response), ENT_QUOTES, 'UTF-8'));  die;
 		break;
-*/		
+*/
 		case 'add':
-			$response = InsertInportMore(json_decode(file_get_contents("php://input"))); 
+			$response = InsertInportMore(json_decode(file_get_contents("php://input")));
 			die;
-		break; 
+		break;
 		case 'toDraft':
-			$response = toDraft(json_decode(file_get_contents("php://input"))); 
+			$response = toDraft(json_decode(file_get_contents("php://input")));
 			die;
-		break; 
+		break;
 		case 'toProd':
-			$response = toProd(json_decode(file_get_contents("php://input"))); 
+			$response = toProd(json_decode(file_get_contents("php://input")));
 			die;
 		break;
 		case 'toSend':
-			//$response = toSend(json_decode(file_get_contents("php://input"))); 
+			//$response = toSend(json_decode(file_get_contents("php://input")));
 			echo 1;
 			die;
-		break; 
+		break;
 		case 'getPorts':
-			$response = getPorts(); 
-			$response = json_decode($response, true);   
+			$response = getPorts();
+			$response = json_decode($response, true);
 			echo(htmlspecialchars(json_encode($response), ENT_QUOTES, 'UTF-8'));
-			break; 
-		case 'activeclose': //запрос в БД на обновление //проверка результата запроса			
+			break;
+		case 'activeclose': //запрос в БД на обновление //проверка результата запроса
 			echo json_encode(activeClose($_GET['id'], $_GET['knopka']));die;
 			break;
 		case 'activecheck': //запрос в БД на обновление //проверка результата запроса
 			$result = [ 'STATUS' => 'OK' ];
-			echo json_encode($result); die; 
+			echo json_encode($result); die;
 			break;
 		default: 			throw new Exception('Действие не найдено! (wrong action)');
 	} echo $response; //strpos($response, 'ODBC SQL Server Driver');
 } catch(Exception $e) {  die ( json_encode(array('error' => $e->getMessage())) ); }
- 
+
 ?>
