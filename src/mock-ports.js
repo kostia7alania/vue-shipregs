@@ -1,0 +1,1 @@
+export default [{ "value": null, "text": "\u0432\u0441\u0435" }, { "text": "\u0410\u0441\u0442\u0440\u0430\u0445\u0430\u043d\u044c", "value": "RUASF" }, { "text": "\u041a\u0430\u0432\u043a\u0430\u0437", "value": "RUKZP" }]
