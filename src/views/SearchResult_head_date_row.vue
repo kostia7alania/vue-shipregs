@@ -2,11 +2,14 @@
       <div class="tr data-row">
         <div class="font-weight-bold first-colimn"> {{row_i+1}} </div>
         <div>
-          <a href="#" @click="goShipById_handler(row)"> {{row.rShipName}} ({{row.Length}}) </a>
+          <a href="#" @click="goShipById_handler(row)"> {{row.rShipName}}</a>
         </div>
+        <div><b>{{row.Length}}</b></div><!-- new 2.6.19-->
         <div>{{row.IMO}}</div>
         <div>{{row.ShipTypeNameRus}}</div>
+        <div>{{row.Shipowner}}</div><!-- new 2.6.19-->
         <div>{{row.CountryNameRus}}</div>
+        <div>{{row.DWT}}</div><!-- new 2.6.19-->
         <div>{{row.DepositStern}}</div>
         <div>{{row.SurfaceDimension}}</div>
         <div>{{row.HourMinute}}</div>
@@ -24,58 +27,59 @@
             <b-button v-if="!inport" @click="actions_row_handler({action: 'toDraft', data: row})">
               <span v-b-popover.hover="'Данное действие перенесет запись в черновики'" title="В черновики">
               ↓
-              </span> 
+              </span>
             </b-button>
             <!--<b-button v-if="!inport" @click="$emit('actions_handlers', {action: 'edit', data: row})">O</b-button>-->
               <b-button v-if="inport" @click="actions_row_handler({action: 'toProd', data: row})">
               <span v-b-popover.hover="'Данное действие перенесет запись из черновика'" title="Из черновиков">
                ↑ <!-- <img class="icons-width" src="../img/adding.png">-->
-              </span> 
-            </b-button> 
+              </span>
+            </b-button>
           </div>
         </div>
-      </div> 
+      </div>
 </template>
 
 <script>
-
 export default {
   name: "search-result-head-date-row",
-  props: ['row', 'row_i', 'inport'],
+  props: ["row", "row_i", "inport"],
   data() {
     return {};
   },
-  computed: { 
-  },
+  computed: {},
   watch: {},
   mounted() {},
   updated() {},
   beforeDestroy() {},
   methods: {
-    goShipById_handler(e){
+    goShipById_handler(e) {
       //console.log('shipID->',e.ShipID);
-      window.top.goShipByID(e.ShipID,2);
+      (window.top &&
+        window.top.goShipByID &&
+        window.top.goShipByID(e.ShipID, 2)) ||
+        console.warn("не объявлена глобальная функция window.top.goShipByID");
       //http://window.top.goShipById('shipId',2)
     },
-    actions_row_handler({action, data}){
-   //   console.log('0---actions_row_handler=>',arguments,data.EntID )
-      this.$emit('actions_handlers', {action: action, data: data});
-      this.$nextTick ( () => this.$forceUpdate() );
+    actions_row_handler({ action, data }) {
+      //   console.log('0---actions_row_handler=>',arguments,data.EntID )
+      this.$emit("actions_handlers", { action: action, data: data });
+      this.$nextTick(() => this.$forceUpdate());
     }
-   }
+  }
 };
 </script>
- 
+
 
 <style lang="scss">
-.first-colimn { 
+.first-colimn {
   max-width: 44px;
 }
-.actions-colimn { 
+.actions-colimn {
   max-width: 80px;
-} 
-  .first-colimn,
-  .actions-colimn { 
-    align-items: center;
-  } 
+}
+.first-colimn,
+.actions-colimn {
+  align-items: center;
+}
 </style>

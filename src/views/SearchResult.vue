@@ -25,25 +25,25 @@
             @header_click="header_click"
             @actions_handlers="$emit('actions_handlers',$event)"
           />
- 
-          <!--   <template v-for="(itm_arr,itm_arr_i) in items"> 
+
+          <!--   <template v-for="(itm_arr,itm_arr_i) in items">
 <!- -              <p class="drag-to" v-if="itm_arr.header=='1. ЗАХОД С МОРЯ'"
                   :class="{over: over}"
-                  @dragover="dragover_handler" 
+                  @dragover="dragover_handler"
                   @dragleave="dragleave_handler"
                   @drag="drag_handler"
-                  @dragend="dragend_handler" 
+                  @dragend="dragend_handler"
                  :key='itm_arr_i'>test {{itm_arr_i}}</p>
           -->
-          <!--    <search-result-rows  
+          <!--    <search-result-rows
                   v-for="(k,index) in parseKey(itm_arr.arr)" :key="''+itm_arr_i + index"
                   :itm_arr="itm_arr"
                   :ROWS_headers="ROWS_headers"
-                  @header_click="header_click" 
+                  @header_click="header_click"
                   :itm_arr_i="itm_arr_i"
                   :index="index"
                   :k="k"
-                /> 
+                />
           </template>-->
         </div>
       </div>
@@ -56,23 +56,23 @@
     >
       <div class="table-bordered my-table">
         <!--
-              <div class="tr tr-th tr-th-footer"> <div>Внутрипортовые перемещения (черновики)</div> </div> 
+              <div class="tr tr-th tr-th-footer"> <div>Внутрипортовые перемещения (черновики)</div> </div>
                 <div draggable="true"
                   @dragstart="dragstart_handler"
                   @dragend="dragend_handler($event,i)"
                   @drag="drag_handler"
-                 class="drag tr" v-for="(e,i) in new Array(111).fill(11)" :key="i">  
+                 class="drag tr" v-for="(e,i) in new Array(111).fill(11)" :key="i">
                   <div v-for="(f,ii) in FIELDS" :key="f ">
                       <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
                       <span v-else>{{f}}</span>
-                  </div> 
-                </div>   
+                  </div>
+                </div>
         -->
         <div class="table-content">
           <div
             @mousedown="mousedown_handler"
             @mousemove="mousemove_handler"
-            @mouseup="mouseup_handler" 
+            @mouseup="mouseup_handler"
             @click="dblclick_handler"
             class="tr tr-th tr-th-main sections-header"
             :class="{'tr-th-main-draft': 1}"
@@ -81,8 +81,8 @@
               <b>ЧЕРНОВИКИ</b> &nbsp;
               <b-badge variant="primary">{{show_draft == 'min'?'↑':'↓'}} {{items_inport_count}} </b-badge>
             </div>
-          </div> 
-          
+          </div>
+
           <res-head
             v-show="show_draft!='min'"
             v-for="(itm_arr,itm_arr_i) in items_inport"
@@ -92,8 +92,8 @@
             @header_click="header_click"
             :inport="true"
             @actions_handlers="$emit('actions_handlers',$event)"
-          /> 
-          
+          />
+
         </div>
       </div>
     </div>
@@ -108,17 +108,20 @@ export default {
   props: ["getUsersResult"],
   data() {
     return {
-      show_draft: 'min',
+      show_draft: "min",
       overflow: "auto",
       over: false,
       mousedown: 0,
 
       FIELDS: [
         "N пп",
-        "Название судна, длина",
-        'IMO',
+        "Название судна",
+        "Длина",
+        "IMO",
         "Тип судна",
+        "Судовладелец",
         "Флаг",
+        "DWT",
         "Осадка",
         "Надводный габарит",
         "Время начала движ.",
@@ -154,11 +157,16 @@ export default {
       );
     },
     items_inport() {
-      let out = ["_first", "_second", "_third", "_fourth", "_fifth", "_sixth"].map(
-        (e, i) => {
-          return { ...this.ROWS_headers[i], ...{ arr: this.parseRow(e) } };
-        }
-      );
+      let out = [
+        "_first",
+        "_second",
+        "_third",
+        "_fourth",
+        "_fifth",
+        "_sixth"
+      ].map((e, i) => {
+        return { ...this.ROWS_headers[i], ...{ arr: this.parseRow(e) } };
+      });
       window.out = out;
       return out;
     },
@@ -179,7 +187,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-   //   console.log("MOUNTED head date!");
+      //   console.log("MOUNTED head date!");
       let resizer = (window.resizer = e => {
         let h = document.querySelector(".tr-th-main").offsetHeight;
         let d = document.querySelectorAll(".tr-th-second");
@@ -195,27 +203,26 @@ export default {
   },
 
   methods: {
-    dblclick_handler(){
-      this.show_draft = this.show_draft == 'min' ? 'std': 'min';
+    dblclick_handler() {
+      this.show_draft = this.show_draft == "min" ? "std" : "min";
     },
     mousedown_handler(e) {
-     // console.log("mousedown_handler=>", e);
+      // console.log("mousedown_handler=>", e);
       window.m_pos = e.y;
       window.BORDER_SIZE = 33; //ширина нашего перетаскиваемого бордюра;
-        if(e.offsetY < BORDER_SIZE){
-         // this.mousedown = true;
-          //this.show_draft = 'custom';
-        }
+      if (e.offsetY < BORDER_SIZE) {
+        // this.mousedown = true;
+        //this.show_draft = 'custom';
+      }
     },
 
-
     mousemove_handler(e) {
-   //   console.log("e.offsetY", e.offsetY);
+      //   console.log("e.offsetY", e.offsetY);
       if (e.offsetY > window.BORDER_SIZE) this.mousedown = false;
       if (this.mousedown) {
-    //    console.log("mouseMOVE", e);
-    //    console.log("offsetHeight", e.target.offsetHeight);
-    //    console.log("offsetY", e.offsetY);
+        //    console.log("mouseMOVE", e);
+        //    console.log("offsetHeight", e.target.offsetHeight);
+        //    console.log("offsetY", e.offsetY);
         //e.target.offsetHeight = e.offsetY;
         window.e = e;
         document.querySelector(".drag-from").style.minHeight =
@@ -223,26 +230,27 @@ export default {
         if (!("m_pos" in window)) window.m_pos = "";
         const dy = window.m_pos - e.y;
         window.m_pos = e.y;
-        var panel = document.querySelector('.drag-from')
-        panel.style.height = (parseInt(getComputedStyle(panel, '').height)+dy) + "px"
+        var panel = document.querySelector(".drag-from");
+        panel.style.height =
+          parseInt(getComputedStyle(panel, "").height) + dy + "px";
       }
     },
     mouseup_handler(e) {
       this.mousedown = 0;
-     // console.log("mouseUP", e);
+      // console.log("mouseUP", e);
     },
 
     header_click(e) {
       //this.ROWS_headers[e].show = !this.ROWS_headers[e].show;
-      setTimeout(e=>{
+      setTimeout(e => {
         this.overflow = "inherit";
         this.$nextTick(() => (this.overflow = "auto"));
-      },100)
+      }, 100);
     },
 
     parseKey(key) {
       let a = typeof key == "object" ? Object.keys(key) : "";
-   //   console.log("parse!!=>", key, a);
+      //   console.log("parse!!=>", key, a);
       return a;
     },
     parseRow(name) {
@@ -254,7 +262,7 @@ export default {
       e.dataTransfer.effectAllowed =
         "all"; /*разрешенные события у драговера и энтера - значения е.dataTransfer.dropEffect */
       e.dataTransfer.setData("text", 111);
-  //    console.log(e.dataTransfer);
+      //    console.log(e.dataTransfer);
       //-> тащим иконку:
       let dragIcon = document.createElement("img");
       dragIcon.src = "./img/arrow.png";
@@ -313,15 +321,14 @@ export default {
   }
 };
 </script>
- 
+
 
 <style lang="scss">
-
 .bounce-enter-active {
-  animation: bounce-in .5s;
+  animation: bounce-in 0.5s;
 }
 .bounce-leave-active {
-  animation: bounce-in .5s reverse;
+  animation: bounce-in 0.5s reverse;
 }
 @keyframes bounce-in {
   0% {
@@ -334,5 +341,4 @@ export default {
     transform: scale(1);
   }
 }
-
 </style>
