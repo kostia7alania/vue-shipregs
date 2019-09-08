@@ -11,11 +11,11 @@
       <img 
         :key="1"
         v-if="visible"
-        @click="visible=!visible" 
+        @click.stop="visible=!visible" 
         class="delete_img"
         :src="del_img"
       >
-      <img :key="2" v-else @click="visible=!visible" :src="calendar_img">
+      <img :key="2" v-else @click.stop="visible=!visible" :src="calendar_img">
     </transition-group>
 
     <!-- <date-picker width="100%"

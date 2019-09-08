@@ -52,8 +52,8 @@ export default {
       .get(url)
       .then(e => {
         let d;
-        if (process.env.NODE_ENV === "development") d = mockPorts;
-        else d = e.data;
+        //if (process.env.NODE_ENV === "development")  d = mockPorts;else d = e.data;
+        d = e.data;
 
         if (!(d instanceof Array) && d instanceof Object) {
           //d = Object.keys(d).map( key => [ +key, d[key] ] );//преобразование в аррау
@@ -128,15 +128,8 @@ export default {
               );
               return;
             }
-            if (process.env.NODE_ENV === "development") {
-              return (this.getUsersResult = mock);
-            }
-            try {
-              data = JSON.parse(data.replace(/&quot;/gim, '"'));
-            } catch (e) {
-              console.warn("[catch] [err] ->", e);
-              throw "Невозможно спарсить данные, пришедшие с сервера!";
-            }
+            //if (process.env.NODE_ENV === "development") return (this.getUsersResult = mock);
+            //try {data = JSON.parse(data.replace(/&quot;/gim, '"'));} catch (e) {console.warn("[catch] [err] ->", e);throw "Невозможно спарсить данные, пришедшие с сервера!";}
             if (typeof data != "object") throw "данные не пришли";
             this.getUsersResult = data;
           })

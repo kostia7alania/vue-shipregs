@@ -235,7 +235,7 @@ legend {
 
 
 /*date-header*/
-.date-header{
+.date-header {
     cursor: pointer;
     &:hover {
         color: red;
@@ -251,4 +251,12 @@ input {
 }
 
 
+
+.ShipOwner {
+    min-width: 117px;
+}
+.ShipOwner * {
+    min-width: 117px;
+/*    word-break: keep-all; */
+}
 

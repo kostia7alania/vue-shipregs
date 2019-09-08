@@ -13,9 +13,9 @@
     </h2>
 
     <template v-if="data && compDate(2)  && data.ed_DateFrom && compDatePlus1() && data.timeTo.HH"> 
-    <h6 class="first-h6"> с 
-      <animateNumber :value="data.timeFrom.HH" :isTime="true"/>:<animateNumber :value="data.timeFrom.mm" :isTime="true"/> <!--{{data.ed_DateFrom}}--> &nbsp; <animateNumber :value="compDate(0)"  :isTime="true"/>.<animateNumber :value="compDate(1)"  :isTime="true"/>.<animateNumber :value="compDate(2)"/></h6>
-    <h6 class="second-h6"> по
+      <h6 class="first-h6"> с 
+        <animateNumber :value="data.timeFrom.HH" :isTime="true"/>:<animateNumber :value="data.timeFrom.mm" :isTime="true"/> <!--{{data.ed_DateFrom}}--> &nbsp; <animateNumber :value="compDate(0)"  :isTime="true"/>.<animateNumber :value="compDate(1)"  :isTime="true"/>.<animateNumber :value="compDate(2)"/></h6>
+      <h6 class="second-h6"> по
        <animateNumber :value="data.timeTo.HH" :isTime="true"/>:<animateNumber :value="data.timeTo.mm" :isTime="true"/>  <!--{{getTODAY}}-->       &nbsp;    <animateNumber :value="compDatePlus1().dd"  :isTime="true"/>.<animateNumber :value="compDatePlus1().mm"  :isTime="true"/>.<animateNumber :value="compDatePlus1().yy"/></h6>
     
     </template>

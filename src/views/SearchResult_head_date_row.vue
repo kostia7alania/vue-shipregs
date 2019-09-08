@@ -7,7 +7,9 @@
         <div><b>{{row.Length}}</b></div><!-- new 2.6.19-->
         <div>{{row.IMO}}</div>
         <div>{{row.ShipTypeNameRus}}</div>
-        <div>{{row.Shipowner}}</div><!-- new 2.6.19-->
+        <div class="ShipOwner"> 
+          <p v-for="el in ShipOwnerComputed" :key="el.Company">{{el.Company}}</p>
+        </div><!-- new 2.6.19-->
         <div>{{row.CountryNameRus}}</div>
         <div>{{row.DWT}}</div><!-- new 2.6.19-->
         <div>{{row.DepositStern}}</div>
@@ -47,7 +49,15 @@ export default {
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    ShipOwnerComputed(){
+      const s = this.row.ShipOwner
+      if(typeof s == 'string' && s.trim().length) {
+        return JSON.parse(s)
+      }
+      return []
+    }
+  },
   watch: {},
   mounted() {},
   updated() {},

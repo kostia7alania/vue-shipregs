@@ -12,8 +12,11 @@
             <div
               v-for="(ff,i) in FIELDS"
               :key="ff"
-              :class="{'first-colimn':i==0,
-                                                               'actions-colimn':i==FIELDS.length-1}"
+              :class="{
+                        'first-colimn':i==0,
+                        'actions-colimn':i==FIELDS.length-1, 
+                        'ShipOwner': ff=='Судовладелец'
+                      }"
             >{{ff}}</div>
           </div>
 
@@ -237,7 +240,6 @@ export default {
     },
     mouseup_handler(e) {
       this.mousedown = 0;
-      // console.log("mouseUP", e);
     },
 
     header_click(e) {
@@ -283,7 +285,6 @@ export default {
       let t = e.target;
       if (t.classList.contains("tr")) {
         t.classList.add("over");
-        console.log(1);
       } else if (t.parentElement.classList.contains("tr")) {
         t.parentElement.classList.add("over");
         console.log(2);
