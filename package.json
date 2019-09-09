@@ -22,11 +22,12 @@
     "moment": "^2.23.0",
     "pikaday": "^1.8.0",
     "surge": "^0.21.3",
+    "sweetalert2": "^8.17.1",
     "vue": "^2.6.10",
     "vue-good-table": "^2.16.0",
-    "vue-izitoast": "^1.1.2",
     "vue-select": "^2.5.1",
-    "vue2-timepicker": "^0.1.4"
+    "vue2-timepicker": "^0.1.4",
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
     "@enrian/vue-pikaday": "^1.0.3",
