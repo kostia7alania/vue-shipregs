@@ -1,26 +1,25 @@
 <template>
   <div>
-    <!--заголовки разделов @click="$emit('header_click', itm_arr_i)"-->
+    <!--заголовки разделов-->
 
       <div @click="show_handler"
-            class="tr tr-th" :class="{'tr-th-second': !inport,'tr-th-second-inport': inport}">
+            class="tr tr-th" :class="{'tr-th-second': !isDraft,'tr-th-second-inport': isDraft}">
           <div>
-            <b>{{itm_arr.header}}</b> &nbsp; <b-badge variant="primary">{{show?'↑':'↓'}} {{items_count}}</b-badge>
-
+            <b>{{el.title}}</b> &nbsp; <b-badge variant="primary">{{show?'↑':'↓'}} {{items_count}}</b-badge>
           </div>
       </div>
-      <res-head-date v-show="show && date_arr.length" v-for="(date_arr, i) in itm_arr.arr" :key="i" :key_arr="i" :date_arr="date_arr" :class="{ height0: !show}" :inport="inport" @actions_handlers="$emit('actions_handlers',$event)"/>
-       <div v-if="itm_arr.arr.length==0" :class="{ height0: !show}" :inport="inport">Нет элементов для отображения!</div>
+ 
   </div>
 </template>
 
-<script>
-import resHeadDate from "./SearchResult_head_date";
+<script> 
 
 export default {
-  components: { "res-head-date": resHeadDate },
+  components: {
+    "search-result-head-get-items": () => import("./SearchResult_head-get-items")
+  },
   name: "search-result-head",
-  props: ["itm_arr", "inport", "itm_arr_i"],
+  props: ["el", "isDraft"],
   data() {
     return {
       show: false
@@ -28,7 +27,8 @@ export default {
   },
   computed: {
     items_count() {
-      let arr = this.itm_arr && this.itm_arr ? this.itm_arr.arr : [];
+      return '-0'
+      let arr = this.el && this.el ? this.el.arr : [];
       let count = 0;
       Object.keys(arr).map(e => (count += arr[e].length));
       return count;

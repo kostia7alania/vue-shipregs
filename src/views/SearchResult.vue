@@ -1,53 +1,17 @@
 <template>
   <div id="search-result" class="wrapper">
-    <div class="first-table" :style="{overflow: overflow}">
-      <!--
-          <div class='tr tr-th'>
-            <div v-for="f in FIELDS" :key="f">  <b>{{f}}</b>  </div>
-          </div>
-      -->
+    <div class="first-table" :style="{overflow}"> 
       <div class="my-table">
         <div class="table-content">
-          <div class="tr tr-th tr-th-main">
-            <div
-              v-for="(ff,i) in FIELDS"
-              :key="ff"
-              :class="{
-                        'first-colimn':i==0,
-                        'actions-colimn':i==FIELDS.length-1, 
-                        'ShipOwner': ff=='Судовладелец'
-                      }"
-            >{{ff}}</div>
-          </div>
+
+          <TableHeader/>
 
           <res-head
-            v-for="( itm_arr, itm_arr_i ) in items"
-            :key="itm_arr_i"
-            :itm_arr_i="itm_arr_i"
-            :itm_arr="itm_arr"
+            v-for="el in PUBLIC_MENU"
+            :key="el.title" :el="el"
             @header_click="header_click"
-            @actions_handlers="$emit('actions_handlers',$event)"
-          />
+          /> 
 
-          <!--   <template v-for="(itm_arr,itm_arr_i) in items">
-<!- -              <p class="drag-to" v-if="itm_arr.header=='1. ЗАХОД С МОРЯ'"
-                  :class="{over: over}"
-                  @dragover="dragover_handler"
-                  @dragleave="dragleave_handler"
-                  @drag="drag_handler"
-                  @dragend="dragend_handler"
-                 :key='itm_arr_i'>test {{itm_arr_i}}</p>
-          -->
-          <!--    <search-result-rows
-                  v-for="(k,index) in parseKey(itm_arr.arr)" :key="''+itm_arr_i + index"
-                  :itm_arr="itm_arr"
-                  :ROWS_headers="ROWS_headers"
-                  @header_click="header_click"
-                  :itm_arr_i="itm_arr_i"
-                  :index="index"
-                  :k="k"
-                />
-          </template>-->
         </div>
       </div>
     </div>
@@ -55,22 +19,9 @@
     <div
       class="drag-from"
       :class="{'second-table-minimized': show_draft == 'min','second-table': show_draft=='std'}"
-      :style="{overflow: overflow}"
+      :style="{overflow}"
     >
-      <div class="table-bordered my-table">
-        <!--
-              <div class="tr tr-th tr-th-footer"> <div>Внутрипортовые перемещения (черновики)</div> </div>
-                <div draggable="true"
-                  @dragstart="dragstart_handler"
-                  @dragend="dragend_handler($event,i)"
-                  @drag="drag_handler"
-                 class="drag tr" v-for="(e,i) in new Array(111).fill(11)" :key="i">
-                  <div v-for="(f,ii) in FIELDS" :key="f ">
-                      <span v-if="ii==0" class="font-weight-bold">{{f}}</span>
-                      <span v-else>{{f}}</span>
-                  </div>
-                </div>
-        -->
+      <div class="table-bordered my-table"> 
         <div class="table-content">
           <div
             @mousedown="mousedown_handler"
@@ -82,19 +33,16 @@
           >
             <div>
               <b>ЧЕРНОВИКИ</b> &nbsp;
-              <b-badge variant="primary">{{show_draft == 'min'?'↑':'↓'}} {{items_inport_count}} </b-badge>
+              <b-badge variant="primary">{{show_draft == 'min'?'↑':'↓'}} </b-badge>
             </div>
           </div>
 
           <res-head
             v-show="show_draft!='min'"
-            v-for="(itm_arr,itm_arr_i) in items_inport"
-            :key="itm_arr_i"
-            :itm_arr_i="itm_arr_i"
-            :itm_arr="itm_arr"
+            v-for="el in DRAFT_MENU"
+            :key="el.title" :el="el"
             @header_click="header_click"
-            :inport="true"
-            @actions_handlers="$emit('actions_handlers',$event)"
+            :isDraft="true"
           />
 
         </div>
@@ -103,94 +51,28 @@
   </div>
 </template>
 
-<script>
-import resHead from "./SearchResult_head";
+<script> 
 export default {
   name: "search-result",
-  components: { "res-head": resHead },
-  props: ["getUsersResult"],
+  components: { 
+    "res-head":()=>import("./SearchResult_head"),
+    "TableHeader":()=>import("./TableHeader"),
+    
+     },
   data() {
     return {
       show_draft: "min",
       overflow: "auto",
       over: false,
-      mousedown: 0,
-
-      FIELDS: [
-        "N пп",
-        "Название судна",
-        "Длина",
-        "IMO",
-        "Тип судна",
-        "Судовладелец",
-        "Флаг",
-        "DWT",
-        "Осадка",
-        "Надводный габарит",
-        "Время начала движ.",
-        "Маршрут",
-        "Причал/якорная стоянка",
-        "Агентская компания",
-        "Лоцм. обеспечение",
-        "Груз",
-        "Примечание",
-        "Действия"
-      ],
-
-      ROWS_headers: [
-        { header: "1. ЗАХОД С МОРЯ", show: 0 },
-        { header: "2. ВЫХОД В МОРЕ", show: 0 },
-        { header: "3. ВНУТРИПОРТОВЫЕ ПЕРЕМЕЩЕНИЯ", show: 0 },
-        { header: "4. ВЫХОД НА ВВП", show: 0 },
-        { header: "5. ТРАНЗИТ НА ВВП", show: 0 },
-        { header: "6. ЗАХОД С ВВП", show: 0 }
-      ],
-      ROWS_headers_inport: {
-        header: "3. ВНУТРИПОРТОВЫЕ ПЕРЕМЕЩЕНИЯ (черновики)",
-        show: 0
-      }
+      mousedown: 0
     };
   },
   computed: {
-    items() {
-      return ["first", "second", "third", "fourth", "fifth", "sixth"].map(
-        (e, i) => {
-          return { ...this.ROWS_headers[i], ...{ arr: this.parseRow(e) } };
-        }
-      );
-    },
-    items_inport() {
-      let out = [
-        "_first",
-        "_second",
-        "_third",
-        "_fourth",
-        "_fifth",
-        "_sixth"
-      ].map((e, i) => {
-        return { ...this.ROWS_headers[i], ...{ arr: this.parseRow(e) } };
-      });
-      window.out = out;
-      return out;
-    },
-    items_inport_count() {
-      let a = 0;
-      this.items_inport.forEach(e1 =>
-        Object.keys(e1.arr).forEach(key => (a += e1.arr[key].length))
-      );
-      return a;
-    },
-    items_count() {
-      let a = 0;
-      this.items.forEach(e1 =>
-        Object.keys(e1.arr).forEach(key => (a += e1.arr[key].length))
-      );
-      return a;
-    }
+    DRAFT_MENU() { return this.$store.getters['items/DRAFT_MENU'] },
+    PUBLIC_MENU() { return this.$store.getters['items/PUBLIC_MENU'] }, 
   },
   mounted() {
-    this.$nextTick(() => {
-      //   console.log("MOUNTED head date!");
+    this.$nextTick(() => { 
       let resizer = (window.resizer = e => {
         let h = document.querySelector(".tr-th-main").offsetHeight;
         let d = document.querySelectorAll(".tr-th-second");
@@ -209,8 +91,7 @@ export default {
     dblclick_handler() {
       this.show_draft = this.show_draft == "min" ? "std" : "min";
     },
-    mousedown_handler(e) {
-      // console.log("mousedown_handler=>", e);
+    mousedown_handler(e) { 
       window.m_pos = e.y;
       window.BORDER_SIZE = 33; //ширина нашего перетаскиваемого бордюра;
       if (e.offsetY < BORDER_SIZE) {
@@ -219,14 +100,9 @@ export default {
       }
     },
 
-    mousemove_handler(e) {
-      //   console.log("e.offsetY", e.offsetY);
+    mousemove_handler(e) { 
       if (e.offsetY > window.BORDER_SIZE) this.mousedown = false;
-      if (this.mousedown) {
-        //    console.log("mouseMOVE", e);
-        //    console.log("offsetHeight", e.target.offsetHeight);
-        //    console.log("offsetY", e.offsetY);
-        //e.target.offsetHeight = e.offsetY;
+      if (this.mousedown) {  
         window.e = e;
         document.querySelector(".drag-from").style.minHeight =
           window.screen.height - e.clientY - 90 + "px";
@@ -242,8 +118,7 @@ export default {
       this.mousedown = 0;
     },
 
-    header_click(e) {
-      //this.ROWS_headers[e].show = !this.ROWS_headers[e].show;
+    header_click(e) { 
       setTimeout(e => {
         this.overflow = "inherit";
         this.$nextTick(() => (this.overflow = "auto"));
@@ -254,10 +129,6 @@ export default {
       let a = typeof key == "object" ? Object.keys(key) : "";
       //   console.log("parse!!=>", key, a);
       return a;
-    },
-    parseRow(name) {
-      let o = this.getUsersResult;
-      return o && typeof o == "object" && name in o ? o[name] : [];
     },
     dragstart_handler(e) {
       e.target.style.opacity = "0.4";
@@ -272,8 +143,7 @@ export default {
       e.dataTransfer.setDragImage(dragIcon, 0, 0);
     },
 
-    dragend_handler(e, i) {
-      //отпускаем в нужном месте, в "е" -- исходная(нужная) нода!
+    dragend_handler(e, i) {  //отпускаем в нужном месте, в "е" -- исходная(нужная) нода!
       e.target.style.opacity = "1";
       //e.target.classList.remove('over');
       this.over = false;
