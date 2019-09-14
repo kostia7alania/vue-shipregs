@@ -7,7 +7,7 @@
         <div><b>{{row.Length}}</b></div><!-- new 2.6.19-->
         <div>{{row.IMO}}</div>
         <div>{{row.ShipTypeNameRus}}</div>
-        <div class="ShipOwner"> 
+        <div class="ShipOwner">
           <p v-for="el in ShipOwnerComputed" :key="el.Company">{{el.Company}}</p>
         </div><!-- new 2.6.19-->
         <div>{{row.CountryNameRus}}</div>
@@ -26,13 +26,13 @@
         <div>{{row.Note}}</div>
         <div class="actions-colimn">
           <div>
-            <b-button v-if="!inport" @click="actions_row_handler({action: 'toDraft', data: row})">
+            <b-button v-if="!isDraft" @click="TO_DRAFT">
               <span v-b-popover.hover="'Данное действие перенесет запись в черновики'" title="В черновики">
               ↓
               </span>
             </b-button>
-            <!--<b-button v-if="!inport" @click="$emit('actions_handlers', {action: 'edit', data: row})">O</b-button>-->
-              <b-button v-if="inport" @click="actions_row_handler({action: 'toProd', data: row})">
+            <!--<b-button v-if="!isDraft" @click="$emit('actions_handlers', {action: 'edit', data: row})">O</b-button>-->
+              <b-button v-if="isDraft" @click="to_prod">
               <span v-b-popover.hover="'Данное действие перенесет запись из черновика'" title="Из черновиков">
                ↑ <!-- <img class="icons-width" src="../img/adding.png">-->
               </span>
@@ -43,26 +43,30 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "search-result-head-date-row",
-  props: ["row", "row_i", "inport"],
+  props: ["row", "row_i", "isDraft"],
   data() {
     return {};
   },
   computed: {
-    ShipOwnerComputed(){
-      const s = this.row.ShipOwner
-      if(typeof s == 'string' && s.trim().length) {
-        return JSON.parse(s)
+    ShipOwnerComputed() {
+      const s = this.row.ShipOwner;
+      if (typeof s == "string" && s.trim().length) {
+        return JSON.parse(s);
       }
-      return []
+      return [];
     }
   },
-  watch: {},
-  mounted() {},
-  updated() {},
   beforeDestroy() {},
-  methods: {
+  methods: { 
+    to_prod() {
+      this.$store.dispatch("items/TRANSFER_ITEMS", { action: "to-prod", row: this.row } )
+    },
+    to_draft() {
+      this.$store.dispatch("items/TRANSFER_ITEMS", { action: "to-draft", row: this.row } )
+    },
     goShipById_handler(e) {
       //console.log('shipID->',e.ShipID);
       (window.top &&
@@ -73,7 +77,7 @@ export default {
     },
     actions_row_handler({ action, data }) {
       //   console.log('0---actions_row_handler=>',arguments,data.EntID )
-      this.$emit("actions_handlers", { action: action, data: data });
+      this.$emit("actions_handlers", { action, data: data });
       this.$nextTick(() => this.$forceUpdate());
     }
   }
@@ -82,14 +86,7 @@ export default {
 
 
 <style lang="scss">
-.first-colimn {
-  max-width: 44px;
-}
-.actions-colimn {
-  max-width: 80px;
-}
-.first-colimn,
-.actions-colimn {
-  align-items: center;
-}
+.first-colimn { max-width: 44px; }
+.first-colimn, .actions-colimn { align-items: center; }
+.actions-colimn { max-width: 80px; }
 </style>
