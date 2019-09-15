@@ -3,178 +3,173 @@
 
     <b-row class="search-filters">
 
-      <b-col md="9">
+      <b-col md="12">
         <b-row  class="search-filters">
           <b-col md="6" class="my-1 ed_DateFrom">
-            <b-form-group horizontal label="Дата, с:" class="mb-0">
+            <b-form-group label-cols label="Дата, с:" class="mb-0">
               <b-input-group>
-                <input-date @input="input_handler($event,'ed_DateFrom')" :value="ed_DateFrom"/>
+                <input-date @input="input_handler($event,'ed_DateFrom')" :value="PARAMS.ed_DateFrom"/>
               </b-input-group>
             </b-form-group>
           </b-col>
 
           <b-col md="6"  class="my-1 timeFrom">
-            <b-form-group align-items="center" horizontal label="Время, с:" class="mb-0 legends">
+            <b-form-group align-items="center" label-cols label="Время, с:" class="mb-0 legends">
               <b-input-group>
-                <input-time @input="input_handler($event,'timeFrom')" v-model="timeFrom"/>
+                <input-time @input="input_handler($event,'timeFrom')" :value="PARAMS.timeFrom"/>
               </b-input-group>
             </b-form-group>
           </b-col>
 
           <b-col md="6" class="my-1 ed_Port">
-            <b-form-group horizontal label="Порт" class="mb-0">
+            <b-form-group label-cols label="Порт" class="mb-0">
               <b-input-group>
-<!--                <b-form-select
-                  @input="input_handler($event,'ed_Port')"
-                  :value="ed_Port"
-                  :options="ports"
-                  class="mb-0"
-                ></b-form-select>
-            -->    
-            <mySelect  
-                  v-if="ports"
-                  @input="input_handler($event,'ed_Port')"
-                  :value="ed_Port"
-                  :ports="ports"
-                  :options="ports"
-                  />
-
+                <my-select 
+                  v-if="PORTS" 
+                  :items="PORTS" 
+                  :value="PARAMS.ed_Port"
+                  @input="input_handler($event,'ed_Port')" 
+                />
               </b-input-group>
             </b-form-group>
           </b-col>
 
           <b-col md="6" class="my-1 timeTo">
-            <b-form-group horizontal label="Время, по:" class="mb-0">
+            <b-form-group label-cols label="Время, по:" class="mb-0">
               <b-input-group>
-                <input-time @input="input_handler($event,'timeTo')" :value="timeTo"/>
+                <input-time @input="input_handler($event,'timeTo')" :value="PARAMS.timeTo"/>
               </b-input-group>
             </b-form-group>
           </b-col>
-        </b-row>
-      </b-col>
+          
 
-      <b-col  align-self="center" md="3">
-        <b-row class="search-filters">
-          <b-col md="12" class="graf_refresh">
-            <b-input-group>
-              <b-col>
-
-              <b-button @click="btn_clicked_handler({action:'getUsers'})" class="mb-1" size="sm"  :class="{disabled: loading, 'btn-gray-dark': !btn_clicked,'btn-success': btn_clicked}" horizontal >
-                  <span v-if="btn_clicked && 0" v-b-popover.hover="'Теперь мы автоматически обновляем данные'" title="Данные актуальны">
-                    <img :src="loading_img" class="icons-width">
-                    Живые данные  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
-                  </span>
-                <template v-else >
-                  <span v-if="loading" v-b-popover.hover="'Подождите, мы обновляем данные...'" title="Загрузка">
-                    <img :src="loading_img" class="icons-width">
-                    Загрузка  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
-                  </span>
-                  <span  v-else >
-                    <img :src="loading_static_img" class="icons-width"> 
-                    Перестроить  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
-                   </span>
-                </template>                 
-              </b-button>
- 
-
-              </b-col>
-
-              <b-col>
-              <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-1" :class="{disabled: loading}" @click="btn_clicked_handler({action:'toExport'})">
-                <span v-b-popover.hover="'Данное действие экспортирует в Excel отчет по текущим выбранным параметрам формы'" title="Экспорт в Excel"> 
-                  <img :src="excel_img" class="icons-width"> 
-                  Экспорт 
-                </span>
-              </b-button>
-              </b-col>
-
-               <!--
-              <b-col>
-              <b-button v-if="btn_clicked" variant="outline-success" size="sm" class="mb-1" :class="{disabled: loading}" @click="btn_clicked_handler({action:'toSend'})">
-                <span v-b-popover.hover="'Данное действие отправит суточный график на сервер'" title="Суточный график"> 
-                  <img :src="telegram_img" class="icons-width"> 
-                  Суточный график 
-                </span>
-              </b-button>
-              </b-col>
-              -->
-
-            </b-input-group>
+          <b-col md="6" class="my-1 ed_Port">
+            <b-form-group label-cols label="Группировать" class="mb-0">
+              <b-input-group>
+                <my-select
+                  v-if="DICTIONARY_TYPE_PORT_PLACE" 
+                  :items="DICTIONARY_TYPE_PORT_PLACE"
+                  :value="PARAMS.type_port_place"
+                  @input="input_handler($event,'type_port_place')"
+                />
+              </b-input-group>
+            </b-form-group>
           </b-col>
+
+
+      <b-col class="btn-actions" offset-md="1" align-self="center" md="5" sm='12'>
+        <b-row align-v="center" class="search-filters">
+              <b-col  class="btn-to-request pl-0 pr-0">
+                <b-button @click="GET_ITEMS" class="mb-1" size="sm"  :class="{disabled: LOADING, 'btn-gray-dark': !btn_clicked,'btn-success': btn_clicked}" horizontal >
+                    <span v-if="btn_clicked && 0" v-b-popover.hover="'Теперь мы автоматически обновляем данные'" title="Данные актуальны">
+                      <img :src="loading_img" class="icons-width">
+                      Живые данные  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
+                    </span>
+                  <template v-else >
+                    <span v-if="LOADING" v-b-popover.hover="'Подождите, мы обновляем данные...'" title="Загрузка">
+                      <img :src="loading_img" class="icons-width">
+                      Загрузка  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
+                    </span>
+                    <span  v-else >
+                      <img :src="loading_static_img" class="icons-width">
+                      Перестроить  &nbsp; <b-badge variant="primary"> <animateNumber :value="counts_all"/> </b-badge>
+                    </span>
+                  </template>
+                </b-button>
+              </b-col>
+              
+              <b-col md="1" xs="1" class="btn-to-export pl-0 pr-0"> 
+                <b-button variant="outline-success" size="sm" class="mb-1" :class="{disabled: LOADING}" @click="TO_EXPORT">
+                  <span v-b-popover.hover="'Данное действие экспортирует в Excel отчет по текущим выбранным параметрам формы'" title="Экспорт в Excel">
+                    <img :src="excel_img" class="icons-width"> 
+                  </span>
+                </b-button> 
+               </b-col>
         </b-row>
       </b-col>
+
+
+        </b-row>
+      </b-col>
+
 
     </b-row>
 
   </div>
 </template>
 
-<script>
-import inputDate from "../components/input-date.vue";
-import inputTime from "../components/input-time.vue";
+<script> 
 
-import mySelect from "../components/my-select.vue"; 
- 
+import { mapState, mapMutations } from "vuex";
+
 export default {
-  components: { "input-date": inputDate, "input-time": inputTime, mySelect },
+  components: {
+    "input-date": () => import("../components/input-date.vue"),
+    "input-time": () => import("../components/input-time.vue"),
+    "my-select": () => import("../components/my-select.vue"),
+  },
+
   name: "search-panel",
-  props:['counts_all', 'loading', 'ports'],
+
   data() {
     return {
-      loading_img: require('@/img/loading.gif'),
-      loading_static_img: require('@/img/loading_static.png'),
-      excel_img: require('@/img/excel.png'),
-      telegram_img: require('@/img/telegram.png'),
-      ed_Port: 'RUAZO',
-      ed_DateFrom: null,
-      timeFrom: { HH: "15", mm: "00" },
-      timeTo: { HH: "15", mm: "00" }, 
-      interval_id: null,
+      loading_img: require("@/img/loading.gif"),
+      loading_static_img: require("@/img/loading_static.png"),
+      excel_img: require("@/img/excel.png"),
+      telegram_img: require("@/img/telegram.png"),
       btn_clicked: false
     };
-  },
-  watch:{
-    ports(){
-      let ps = this.ports;
-      if(ps instanceof Array) { 
-        this.input_handler(ps[0].value,'ed_Port')//первый элемент из списка ПОРТОВ всегда автоматом селектитьСЯ будет
-     //   alert(ps[1].value)
-        this.$forceUpdate();        
-      }
+  }, 
+  computed: { 
+    counts_all() {
+      return this.$store.getters['items/COUNT_MENU_ITEMS']
+    },
+    PARAMS() {
+      return this.$store.state.searchPanel.PARAMS;
+    },
+    LOADING() {
+      return this.$store.state.searchPanel.LOADING; 
+    },
+    PORTS() {
+      return this.$store.state.searchPanel.PORTS; 
+    },
+    DICTIONARY_TYPE_PORT_PLACE() {
+      return this.$store.state.searchPanel.DICTIONARY_TYPE_PORT_PLACE
     }
-  },
-  mounted(){
-    this.$emit('emit_data',this.$data);
   },
   methods: {
-    input_handler(data, prop) {
-    ///  console.log(arguments);
-      this[prop] = data;
-      this.get_data( {action:'getUsers'} );
+    input_handler(val, key) {
+      this.$store.commit("searchPanel/SET_PARAM", { val, key });
+      if (!this.btn_clicked) return; 
+      this.GET_ITEMS()
     },
-    btn_clicked_handler(obj) {
-      if(this.loading) return;
+    TO_EXPORT() {
+      if (this.LOADING) return;
       this.btn_clicked = true;
-      this.get_data(obj);
+      this.$store.dispatch("items/GET_ITEMS", {action: 'to-export'}); 
+    }, 
+    GET_ITEMS(){
+      if (this.LOADING) return;
+      this.btn_clicked = true;
+      this.$store.dispatch("items/GET_ITEMS");
     },
-    get_data(obj) {
-      if (!this.btn_clicked) return;
-      if (this.interval_id) clearInterval(this.interval_id);
-     // this.interval_id = setInterval(e => this.refresh_emit(), 5000);
-      this.refresh_emit(obj);
-    },
-    refresh_emit(obj){
-    //  console.warn('dddd', { ...this.$data, ...{ports: this.ports} });
-      this.$emit("graf_refresh", { data: this.$data, ...obj, ...{ports: this.ports} } );
-    }
   }
 };
 </script>
 
- <style   lang="scss">
+ <style scope lang="scss">
+    
 .search-filters {
-  .form-row {
-    align-items: center;
+  align-items: center;
+
+  .btn-to-export {
+    background: transparent;
+    width: 50px;
   }
-}
- </style>
+  .btn-to-request {
+    button {
+      width:100%
+    }
+  }
+} 
+</style>
