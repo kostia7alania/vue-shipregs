@@ -1,7 +1,7 @@
 
 const isDev = process.env.NODE_ENV == "development"
 module.exports = {
-  transpileDependencies: ['object-hash'],
+  //transpileDependencies: ['object-hash'],
   lintOnSave: isDev,
   devServer: {
     historyApiFallback: true, // noInfo: true,
@@ -10,7 +10,7 @@ module.exports = {
     hot: true,
     proxy: {
       '/api*': {//все запросы))
-        target: 'https://portcall.marinet.ru/develop1/graf/db_grafics.php',// Это скажет серверу разработки проксировать любые неизвестные запросы (запросы, которые не соответствуют статическому файлу) на адрес http://localhost:4000.
+        target: 'https://portcall.marinet.ru/develop1/api',// Это скажет серверу разработки проксировать любые неизвестные запросы (запросы, которые не соответствуют статическому файлу) на адрес http://localhost:4000.
         secure: false,
         changeOrigin: true,
         onProxyRes(proxyRes, req, res) {
@@ -33,4 +33,4 @@ module.exports = {
   outputDir: 'dist',   // "dist",
   indexPath: 'index.html',  // "index.html", //умолч -'index.html'-относительно outputDir
   filenameHashing: false,
-}
+} 
