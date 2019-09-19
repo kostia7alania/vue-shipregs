@@ -16,9 +16,7 @@ Vue.config.productionTip = false
 window.$ = window.jQuery = require('jquery');
 window.bootstrapTable = require('bootstrap-table');
 
-import VueIziToast from 'vue-izitoast';
-import 'izitoast/dist/css/iziToast.css';//import 'izitoast/dist/css/iziToast.min.css';
-Vue.use(VueIziToast); // Vue.use(VueIziToast, defaultOptionsObject);
+window.Swal = require('sweetalert2')
 
 import animateNumber from "./components/animate-number.vue"; Vue.component("animateNumber", animateNumber);
 
@@ -26,9 +24,11 @@ window.axios = require('axios');
 
 Vue.config.devtools = true
 
-window.init_grafics = grafics_url => {
+import store from "./store";
+
+window.init_grafics = props => {
   window.Vue = new Vue({
-    render: h => h(App, { props: { url: grafics_url } })
+    store,
+    render: h => h(App, { props: { props } })
   }).$mount('#app');
-}
-//init_grafics ('url-api');
+} 
