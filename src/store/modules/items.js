@@ -1,0 +1,99 @@
+
+export default {
+    namespaced: true,
+
+    state: {
+        MENU: {
+            public: [],
+            draft: [],
+        },
+        LOADING: false,
+        ERROR: false,
+        ITEMS: [], 
+    },
+
+    getters: {
+        DRAFT_MENU: state =>state.MENU.public,
+        PUBLIC_MENU: state =>state.MENU.draft,
+        COUNT_MENU_ITEMS: state => {  
+            const p = state.MENU.public
+            const d = state.MENU.draft
+            let a = 0; 
+            if (!d) return 0;
+            Object.keys(p).forEach(key => Object.keys(d[key]).forEach(key2 => a += d[key][key2].length ) );
+            Object.keys(d).forEach(key => Object.keys(d[key]).forEach(key2 => a += d[key][key2].length ) );
+            return a;
+        }
+    },
+
+    mutations: {
+        SET_LOADING_OFF(state) { this._vm.$set(state, 'LOADING', false) },
+        SET_LOADING_ON(state) { this._vm.$set(state, 'LOADING', true) },
+        SET_ITEMS(state, ITEMS) { this._vm.$set(state, 'ITEMS', ITEMS) },
+        SET_MENU(state, MENU) { this._vm.$set(state, 'MENU', MENU) },
+
+    },
+
+    actions: {
+
+        GET_ITEMS({ state, commit, dispatch, getters, rootState }, props) {
+
+            const action = typeof props == 'object' && props.action || '';
+            commit('SET_LOADING_ON')
+            let test = e => e ? e : "";
+            const PARAMS = rootState.searchPanel.PARAMS 
+            let p = test(PARAMS.ed_Port);
+            let hf = test(PARAMS.timeFrom.HH);
+            let mf = test(PARAMS.timeFrom.mm);
+            let ht = test(PARAMS.timeTo.HH);
+            let mt = test(PARAMS.timeTo.mm);
+            let df = test(PARAMS.ed_DateFrom);
+            let headers = {};
+            
+            if (action === "to-export") headers = { responseType: "blob" }; 
+                const url = `${rootState.BACKEND_URL}action=get-menu&port=${p}&HoursFrom=${hf}&MinsFrom=${mf}&HoursTo=${ht}&MinsTo=${mt}&ed_DateFrom=${df}&type_port_place=${PARAMS.type_port_place}`;
+                axios
+                    .get(url, headers)
+                    .then(res => {
+                        let data = res.data;
+                        if (typeof data == "string" && !data.match("SQL")) throw "MS SQL ERROR!";
+                        else if (action === "to-export") {
+                            var fileDownload = require("js-file-download");
+                            let prt = rootState.searchPanel.PORTS.filter(e => e.value == p);
+                            prt = prt.length > 0 ? prt[0].text : "";
+                            fileDownload(  data, `Export-${df} [${hf}-${mf} - ${ht}-${mt}]${ p ? ". " + prt : "" }.xlsx` );
+                            return;
+                        } 
+                        else if (typeof data != "object") throw "данные не пришли";
+                        else commit('SET_MENU', data)
+                    })
+                    .catch(err => {
+                        console.warn("ОШИБКА в аксиосе => ", err);
+                        const title = err.response && err.response.status == 501 && 'Необходимо авторизоваться'  || err.response.data && err.response.data.msg || 'Ошибка при получении данных';
+                        Swal.fire({ type: "error", title });
+                    })
+                    .finally(() =>  commit('SET_LOADING_OFF'));
+        },
+
+        TRANSFER_ITEMS({ state, commit, dispatch, getters, rootState }, { row, action }) {
+            const send_data = { row, ...state.ITEMS }; //если суточная телега -подмешиваем существующими данными;
+            // в беке юзаем поля: EntID, FlagStatus, ed_Port
+            debugger
+            const url = `${rootState.BACKEND_URL}action=${action}`;
+            axios
+                .post(url, send_data)
+                .then(e => commit('GET_ITEMS') )
+                .catch(err => {
+                    console.warn("Ошибка при ПОСТе => ", err);
+                    Swal.fire({
+                        type: "error",
+                        title: "Ошибка при отправке данных"
+                    });
+                })
+                .finally(() =>  commit('SET_LOADING_OFF'));
+
+
+        }
+    },
+
+}

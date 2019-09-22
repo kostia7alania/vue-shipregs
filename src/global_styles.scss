@@ -29,14 +29,7 @@ html {
 input,
 select {
     min-width: 100px;
-}
-.search-filters {
-    align-items: center;
-    button {
-        width: 220px;
-    }
-}
- 
+} 
 
 
 
@@ -157,13 +150,9 @@ select {
 }
 
 
- 
   
 .drag-from { /*cursor: pointer;*/ }
 .over {  border: 2px dashed red !important; }
-
-
-
 
 
 
@@ -199,13 +188,7 @@ legend {
 @media (max-width: 900px) {
  legend {
    text-align: left !important;
- }
- .btn {
-   flex:10;
- }
- .graf_refresh {
-   order: 5;
- }
+ } 
  .timeTo {
    order: 4;
  }
@@ -217,6 +200,9 @@ legend {
  }
  .ed_DateFrom {
    order: 1;
+ }
+ .btn-actions {
+     order: 5
  }
 }
 .search-panel {
