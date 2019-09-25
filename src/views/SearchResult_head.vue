@@ -5,10 +5,12 @@
       <div @click="show_handler"
             class="tr tr-th" :class="{'tr-th-second': !isDraft,'tr-th-second-inport': isDraft}">
           <div>
-            <b>{{el.title}}</b> &nbsp; <b-badge variant="primary">{{show?'↑':'↓'}} {{items_count}}</b-badge>
+            <b>{{el.name}}</b> &nbsp; <b-badge variant="primary">{{show?'↑':'↓'}} {{items_count}}</b-badge>
           </div>
       </div>
- 
+  
+    <search-result-head-get-items v-if="show"/>
+
   </div>
 </template>
 
@@ -21,9 +23,7 @@ export default {
   name: "search-result-head",
   props: ["el", "isDraft"],
   data() {
-    return {
-      show: false
-    };
+    return { show: false };
   },
   computed: {
     items_count() {
@@ -41,6 +41,7 @@ export default {
     show_handler() {
       this.show = !this.show;
       this.$emit("header_click");
+      this.$store.dispatch('items/GET_MENU_ITEMS', { isDraft: this.isDraft, el: this.el})
     }
   }
 };
