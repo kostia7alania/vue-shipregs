@@ -1,20 +1,27 @@
 <template>
      <div>
       <!-- даты -->
-      <div @click="show_handler" class="tr tr-th2 date-header">
+     <!--   <div @click="show_handler" class="tr tr-th2 date-header">
         <div style="text-align:left"><b>{{menu_index}} <b-badge variant="primary">{{show?'↑':'↓'}} {{items.length}}</b-badge> </b>  </div>
       </div>
 
         <transition-group name="bounce" tag="div">
   
-            <res-head-date-row v-if="show"
+          <res-head-date-row v-show="show"
               v-for="(row,row_i) in items"
               :row="row" :key="row.EntID"
               :row_i="row_i"
               :isDraft="isDraft"
             />  
-            
+      
         </transition-group>
+         -->     
+           <res-head-date-row  
+              :row="item" 
+              :key="item.EntID"
+              :row_i="menu_index"
+              :isDraft="isDraft"
+            />  
 
     </div>
 </template>
@@ -25,9 +32,10 @@ export default {
     "res-head-date-row": ()=>import("./SearchResult_head_date_row")
   },
   name: "search-result-head-date",
-  props: ["items", "menu_index", "isDraft"],
+  props: ["item", "menu_index", "isDraft"],
   data() {
     return {
+      show:true
     };
   },  
   methods: {

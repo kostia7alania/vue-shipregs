@@ -9,7 +9,19 @@
           </div>
       </div>
   
-    <search-result-head-get-items v-if="show"/>
+    <div>
+          <!-- содержимое разделов-->
+          <res-head-date 
+            v-for="(item, menu_index) in el.items"
+            :key="menu_index" 
+            :item="item"
+            :menu_index="menu_index"
+            :class="{ height0: !show}"
+            :isDraft="isDraft"
+          />
+          <div v-if="el.items.length==0" :class="{ height0: !show}">Нет элементов для отображения!</div>
+      </div>
+      
 
   </div>
 </template>
@@ -18,7 +30,7 @@
 
 export default {
   components: {
-    "search-result-head-get-items": () => import("./SearchResult_head-get-items")
+    "res-head-date":()=>import("./SearchResult_head_date")
   },
   name: "search-result-head",
   props: ["el", "isDraft"],
@@ -26,12 +38,14 @@ export default {
     return { show: false };
   },
   computed: {
-    items_count() {
-      return '-0'
-      let arr = this.el && this.el ? this.el.arr : [];
+    items_count() { 
+      return this.el.items.length
+      /*
+      let arr = this.el && this.el ? this.el.items : [];
       let count = 0;
       Object.keys(arr).map(e => (count += arr[e].length));
       return count;
+      */
     }
   },
   watch: {},
@@ -41,7 +55,7 @@ export default {
     show_handler() {
       this.show = !this.show;
       this.$emit("header_click");
-      this.$store.dispatch('items/GET_MENU_ITEMS', { isDraft: this.isDraft, el: this.el})
+    //  this.$store.dispatch('items/GET_MENU_ITEMS', { isDraft: this.isDraft, el: this.el})
     }
   }
 };

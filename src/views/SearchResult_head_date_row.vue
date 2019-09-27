@@ -26,7 +26,7 @@
         <div>{{row.Note}}</div>
         <div class="actions-colimn">
           <div>
-            <b-button v-if="!isDraft" @click="TO_DRAFT">
+            <b-button v-if="!isDraft" @click="to_draft">
               <span v-b-popover.hover="'Данное действие перенесет запись в черновики'" title="В черновики">
               ↓
               </span>
