@@ -15,7 +15,7 @@
     "animated-number-vue": "^0.1.4",
     "axios": "^0.18.1",
     "babel-plugin-component": "^1.1.1",
-    "bootstrap-table": "^1.12.2",
+    "bootstrap-table": "^1.20.2",
     "bootstrap-vue": "^2.0.0-rc.28",
     "jquery": "^3.4.1",
     "js-file-download": "^0.4.4",
