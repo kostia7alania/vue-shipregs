@@ -19,7 +19,7 @@
     "bootstrap-vue": "^2.0.0-rc.28",
     "jquery": "^3.4.1",
     "js-file-download": "^0.4.4",
-    "moment": "^2.23.0",
+    "moment": "^2.29.4",
     "pikaday": "^1.8.0",
     "surge": "^0.21.3",
     "sweetalert2": "^8.17.1",
